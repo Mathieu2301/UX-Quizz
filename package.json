@@ -1,0 +1,14 @@
+{
+  "name": "ux_quizz",
+  "version": "0.0.1",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main"
+  },
+  "author": "USP5, Mathieu Colmon",
+  "license": "USP 2018",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "latest"
+  }
+}
