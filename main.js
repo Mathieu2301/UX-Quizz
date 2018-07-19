@@ -11,9 +11,13 @@ app.use(require('express').static("./web"));
 io.on('connection', function(client){
     console.log("Connect : " + client)
   
+    client.on('get_language', function(lang, callback){
+        callback(require("./data/"+lang+"/texts.json").texts);
+    })
+
     client.on('disconnect', function(){
-      console.log("Disconnect : " + client)
+        console.log("Disconnect : " + client)
     });
-  });
+});
 
 server.listen(port);

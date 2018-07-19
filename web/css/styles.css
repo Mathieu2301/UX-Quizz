@@ -96,6 +96,12 @@
 .demo-layout .demo-navigation .mdl-navigation__link:hover {
   background-color: #00BCD4;
   color: #37474F;
+  -webkit-transition-property: background-color;
+  -webkit-transition-duration: 0.2s;
+  -webkit-transition-timing-function: ease;
+  transition-property: background-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 .demo-navigation .mdl-navigation__link .material-icons {
   font-size: 24px;

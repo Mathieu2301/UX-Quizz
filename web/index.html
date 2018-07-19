@@ -50,18 +50,26 @@
               <label class="mdl-textfield__label" for="search">Enter your query...</label>
             </div>
           </div>
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+            <i class="material-icons">language</i>
+          </button>
+          <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+            <li class="mdl-menu__item" id="setEN_btn">English</li>
+            <li class="mdl-menu__item" id="setFR_btn">Français</li>
+          </ul>
         </div>
       </header>
       <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
         <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
-          <a class="mdl-navigation__link" id="ux_quizz_btn"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">question_answer</i>UX Quizz</a>
-          <a class="mdl-navigation__link" id="my_results_btn"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">class</i>My results</a>
+          <a class="mdl-navigation__link" id="ux_quizz_btn"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">question_answer</i><div id="ux_quizz_label">UX Quizz</div></a>
+          <a class="mdl-navigation__link" id="my_results_btn"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">class</i><div id="my_results_label">My results</div></a>
         </nav>
       </div>
       <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active" id="loading" style="position: absolute; left: 50%; top: 45%; z-index: 2;"></div>
         <div class="mdl-grid demo-content">
 
-          <!-- Block pour commencer le quizz -->
+            <!-- Block pour commencer le quizz -->
           <div id="block1" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col" style="width: 100%;">
               <form id="start_quizz_form">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -70,7 +78,12 @@
                   <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="screen_name_txtbox_btn" type="submit" style="left: 105%" value="Commencer">
                 </div>
               </form>
-            </div>
+          </div>
+
+            <!-- Block comportant les questions du quizz -->
+          <div id="block2" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col" style="width: 100%;">
+              <input class="mdl-slider mdl-js-slider" type="range" min="0" max="5" value="3" tabindex="0">
+          </div>
           
         </div>
       </main>

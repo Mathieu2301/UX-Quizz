@@ -9,24 +9,52 @@ $(function () {
         start_quizz: "block1"
     }
 
-    var language = "fr";
+    var language = "en";
+    if (getCookie('lang') == "fr" || getCookie('lang') == "en"){
+        setLanguage(getCookie('lang'));
+    }else{
+        setCookie('lang', 'en');
+    }
 
-    socket.emit('get_language', {lang: language, function(json_lang){
-        $(document).attr("title", json_lang.NAME);
-        $('.mdl-layout-title').text(json_lang.NAME);
+    function setLanguage(lang){
+        if (lang == "en"){
+            setCookie('lang', 'en');
+            language = "en";
 
-        $('meta[name=description]').attr("content", json_lang.head_description);
+            $('#setEN_btn').fadeOut();
+            $('#setFR_btn').fadeIn();
+        }else{
+            setCookie('lang', 'fr');
+            language = "fr";
 
-        $('#ux_quizz_btn').text(json_lang.nav_home);
-        $('#my_results_btn').text(json_lang.nav_results);
+            $('#setEN_btn').fadeIn();
+            $('#setFR_btn').fadeOut();
+        }
 
-        $('#screen_name_txtbox_label').text(json_lang.txtbox_ScreenName_label);
-        $('#screen_name_txtbox_btn').text(json_lang.txtbox_ScreenName_btn);
+        
 
-        $('#description_txtlabel').text(json_lang.inblock_description);
-    }})
+        socket.emit('get_language', language, function(json_lang){
+            $(document).attr("title", json_lang.NAME);
+            $('.mdl-layout-title').text(json_lang.NAME);
+    
+            $('meta[name=description]').attr("content", json_lang.head_description);
+    
+            $('#ux_quizz_label').text(json_lang.nav_home);
+            $('#my_results_label').text(json_lang.nav_results);
+    
+            $('#screen_name_txtbox_label').text(json_lang.txtbox_ScreenName_label);
+            $('#screen_name_txtbox_btn').text(json_lang.txtbox_ScreenName_btn);
+    
+            $('#description_txtlabel').text(json_lang.inblock_description);
+        })
+    }
+    
+    $('#setEN_btn').on('click', function(){ setLanguage("en"); });
+    $('#setFR_btn').on('click', function(){ setLanguage("fr"); });
+    
 
     function show_block(name){
+        $('#loading').fadeOut(200);
         $(name).animate({
             left: '-=50px',
             opacity: '1'
@@ -34,6 +62,7 @@ $(function () {
     }
 
     function hide_block(name){
+        $('#loading').fadeIn(200);
         $(name).animate({
             left: '+=50px',
             opacity: '0'
@@ -55,7 +84,10 @@ $(function () {
     });
 
     socket.on('connect', function () {
-        show_block(blocks.all);
+        setTimeout(function(){
+            show_block(blocks.all);
+        }, 1000)
+        
     });
 
     socket.on("disconnect", function(){
