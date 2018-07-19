@@ -1,0 +1,15 @@
+{
+    "texts": {
+        "NAME":"UX Quizz",
+        "head_description":"{INSERER_DESCRIPTION}",
+
+        "nav_home":"UX Quizz",
+        "nav_results":"Mes résultats",
+        
+        
+        "txtbox_ScreenName_label":"Nom de l'écran",
+        "txtbox_ScreenName_btn":"Commencer",
+        
+        "inblock_description":"Description"
+    }
+}

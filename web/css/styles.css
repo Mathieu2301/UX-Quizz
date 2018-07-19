@@ -125,6 +125,9 @@
   color: #EF3C79;
 }
 .demo-graphs {
+  position: relative;
+  left: 50px;
+  opacity: 0;
   padding: 16px 32px;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -175,12 +178,6 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 .demo-cards h3 {
   font-size: 1em;
-}
-.demo-updates .mdl-card__title {
-  min-height: 200px;
-  background-image: url('images/dog.png');
-  background-position: 90% 100%;
-  background-repeat: no-repeat;
 }
 .demo-cards .mdl-card__actions a {
   color: #00BCD4;
