@@ -2,27 +2,27 @@
     "questions": [
         {
             "question" : "J’ai Indiqué à l’utilisateur les éléments cliquables​",
-            "tags" : ["incitation"]
+            "topics" : ["incitation"]
         },
         {
             "question" : "Le titre de la page est clair et en adéquation avec le contenu​​",
-            "tags" : ["incitation"]
+            "topics" : ["incitation"]
         },
         {
             "question" : "J’ai ajouté des aides de saisie par exemple: pour une date (jj.mm.aaaa), pour une devise (EUR)​​",
-            "tags" : ["incitation"]
+            "topics" : ["incitation"]
         },
         {
             "question" : "J’ai Affiché les unités de mesure des données à saisir​​",
-            "tags" : ["incitation"]
+            "topics" : ["incitation"]
         },
         {
             "question" : "J’ai fourni des indices sur la longueur autorisée des entrées dans un champ",
-            "tags" : ["incitation"]
+            "topics" : ["incitation"]
         },
         {
             "question" : "J’ai intégré des éléments dynamiques pour capter le regard​​",
-            "tags" : ["incitation"]
+            "topics" : ["incitation"]
         }
     ]
 }
