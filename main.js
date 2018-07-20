@@ -18,26 +18,35 @@ io.on('connection', function(client){
         var lang = data.language;
 
         if (user_name != "" && screen_name != ""){
+            
+            var questions_json = require("./data/"+lang+"/questions.json").questions;
+            var topics_json = require("./data/"+lang+"/topics.json").heuristiques;
+
+            var topic_actuel = 0;
+
+            topics_json.forEach(topic => {
+                // topic.name;
+                // topic.label;
+                // topic.description;
+                // topic.goals[];
+
+                var question_actuelle = 0;
+                
+                questions_json.forEach(question => {
+                    if (question.topic = topic_actuel){
+                        client.emit('insert_question', topic.name + "_" + question_actuelle, screen_name + " : " + topic.label, topic.description, question.txt);
+                    }
+                    ++question_actuelle;
+                });
+
+                ++topic_actuel;
+                
+            });
 
             
-            
-
-            socket.emit('insert_question', "q2", "J'ai mangé du chocolat", function(answer){
-                if (answer == 0){
-                    console.log("Pas de réponse")
-                }else if (answer == 1){
-                    console.log("Réponse : Non")
-                }else if (answer == 2){
-                    console.log("Réponse : Partiellement")
-                }else if (answer == 3){
-                    console.log("Réponse : Oui")
-                }else{
-                    console.log("Vous devez répondre à toutes les questions", "error")
-                }
-            })
 
         }else{
-            console.log("aa")
+            console.log("USER = " + user_name + " // SCREEN = " + screen_name);
             client.emit('notif', "Wrong screen name", "warn");
         }
     })

@@ -5,7 +5,7 @@
         },
         "titles":{
             "description_block":"Welcome",
-            "login_block":"Login with your MX email",
+            "login_block":"Login with your Murex email",
             "start_quizz_block":"Start the quizz now"
         },
         "labels":{

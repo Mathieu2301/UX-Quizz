@@ -1,28 +1,32 @@
 {
     "questions": [
         {
-            "question" : "J’ai Indiqué à l’utilisateur les éléments cliquables​",
-            "topics" : ["incitation"]
+            "txt" : "J’ai Indiqué à l’utilisateur les éléments cliquables​",
+            "topic" : 0
         },
         {
-            "question" : "Le titre de la page est clair et en adéquation avec le contenu​​",
-            "topics" : ["incitation"]
+            "txt" : "Le titre de la page est clair et en adéquation avec le contenu​​",
+            "topic" : 0
         },
         {
-            "question" : "J’ai ajouté des aides de saisie par exemple: pour une date (jj.mm.aaaa), pour une devise (EUR)​​",
-            "topics" : ["incitation"]
+            "txt" : "J’ai ajouté des aides de saisie par exemple: pour une date (jj.mm.aaaa), pour une devise (EUR)​​",
+            "topic" : 0
         },
         {
-            "question" : "J’ai Affiché les unités de mesure des données à saisir​​",
-            "topics" : ["incitation"]
+            "txt" : "J’ai Affiché les unités de mesure des données à saisir​​",
+            "topic" : 0
         },
         {
-            "question" : "J’ai fourni des indices sur la longueur autorisée des entrées dans un champ",
-            "topics" : ["incitation"]
+            "txt" : "J’ai fourni des indices sur la longueur autorisée des entrées dans un champ",
+            "topic" : 0
         },
         {
-            "question" : "J’ai intégré des éléments dynamiques pour capter le regard​​",
-            "topics" : ["incitation"]
+            "txt" : "J’ai intégré des éléments dynamiques pour capter le regard​​",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’aime le chocolat​​",
+            "topic" : 1
         }
     ]
 }

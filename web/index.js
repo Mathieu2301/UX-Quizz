@@ -63,35 +63,57 @@ $(function () {
     function show_block(name){
         $('#loading').fadeOut(200);
         $(name).animate({
-            left: '-50px',
-            opacity: '1'
+            left: '0px',
+            opacity: '1',
+            height: '50%',
+            padding: "16px 32px"
         }, 700);
+        $(name).fadeIn();
     }
 
     function hide_block(name){
         $('#loading').fadeIn(200);
         $(name).animate({
-            left: '50px',
-            opacity: '0'
+            left: '-100px',
+            opacity: '0',
+            height: '0px',
+            padding: '0px'
         }, 700);
+        $(name).fadeOut();
     }
 
     document.onkeypress=function(e){
         e=e||window.event;
         var key=e.which?e.which:event.keyCode;
-        notif("Key = " + key);
         console.log("Key = " + key);
     }
 
     $("#start_quizz").submit(function(event) {
         var scr_name = $('#screen_name_txtbox').val();
-        alert("Creating a quizz for the screen : " + scr_name);
-        socket.emit('start_quizz', {user_name: getCookie('name'), screen_name: scr_name, language: language})
+        socket.emit('start_quizz', {user_name: getCookie('user'), screen_name: scr_name, language: language})
+        event.preventDefault();
+    });
+    
+    $("#login_block").submit(function(event) {
+        var user_name = $('#username_txtbox').val();
+        if (user_name.includes("@")){
+            notif('Please do not enter the "@murex.com"', "warn");
+        }else{
+            setCookie('user', user_name);
+
+            hide_block(blocks.login);
+            show_block(blocks.start_quizz);
+        }
         event.preventDefault();
     });
 
     socket.on('connect', function () {
         setTimeout(function(){
+
+            if (getCookie("user").includes('@')){
+                notif('Please do not enter the "@murex.com"', "warn");
+                setCookie('user', "");
+            }
 
             if (getCookie("user") != ""){
                 show_block(blocks.description_block);
@@ -99,17 +121,23 @@ $(function () {
             }else{
                 show_block(blocks.description_block);
                 show_block(blocks.login);
-
             }
         }, 200)
         
     });
 
 
-    socket.on('insert_question', function(id, text, callback){
-        var template = '<li class="mdl-list__item"><span class="mdl-list__item-primary-content"><i class="material-icons" style="padding-right: 8px;bottom: 1px;position: relative;">add_circle</i><div id="question_text">{text}​</div></span><span class="mdl-list__item-secondary-action"><label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="{id}o1"><input type="radio" id="{id}o1" class="mdl-radio__button" name="{id}" value="1"><span class="mdl-radio__label">Non</span></label><label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="{id}o2"><input type="radio" id="{id}o2" class="mdl-radio__button" name="{id}" value="2"><span class="mdl-radio__label">Partiellement</span></label><label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="{id}o3"><input type="radio" id="{id}o3" class="mdl-radio__button" name="{id}" value="3"><span class="mdl-radio__label">Oui</span></label><label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="{id}o4"><input type="radio" id="{id}o4" class="mdl-radio__button" name="{id}" value="0"><span class="mdl-radio__label">Non applicable</span></label></span></li>';
+    socket.on('insert_question', function(id, title, description, text, callback){
+        hide_block(blocks.start_quizz);
+        show_block(blocks.quizz_questions);
+        $('#quizz_block_title').text(title);
+        $('#quizz_block_description').text(description);
+
+        var template = '<li class="mdl-list__item"><span class="mdl-list__item-primary-content" style="width: 50%;"><i class="material-icons" style="padding-right: 15px;bottom: 1px;position: relative;">add_circle</i><div id="question_text" style="width: 70%;">{text}​</div></span><span class="mdl-list__item-secondary-action"><label class="radio-container" for="{id}o1">Non<input type="radio" id="{id}o1" name="{id}" value="1"><span class="checkmark"></span></label><label class="radio-container" for="{id}o2">Partiellement<input type="radio" id="{id}o2" name="{id}" value="2"><span class="checkmark"></span></label><label class="radio-container" for="{id}o3">Oui<input type="radio" id="{id}o3" name="{id}" value="3"><span class="checkmark"></span></label><label class="radio-container" for="{id}o4">Non applicable<input type="radio" id="{id}o4" name="{id}" value="0"><span class="checkmark"></span></label></span></li>';
+        
         var html = template.replace(/{id}/g, id).replace(/{text}/g, text);
         $("#list-questions").append(html);
+
 
         $('#questions_validate_btn').on("click", function(){
             var answer = $('input[name='+id+']:checked').val()
