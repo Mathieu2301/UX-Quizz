@@ -5,14 +5,14 @@
             "label": "Incitation",
             "description" : "Les informations permettant aux utilisateurs de savoir où ils sont, d’identifier l’état ou contexte dans lequel ils se trouvent, de même que les outils d’aide et leur accessibilité.​",
             "goals" : 
-                ["Faciliter la navigation par fonctionnalité et éviter les erreurs.​"] 
+                ["Faciliter la navigation par fonctionnalité et éviter les erreurs."] 
         },
         {
             "name": "questions_debiles",
             "label": "Questions débiles",
             "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
             "goals" : 
-                ["Inutile​"] 
+                ["Inutile"]
         }
     ]
 }

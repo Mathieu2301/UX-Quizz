@@ -80,6 +80,7 @@ $(function () {
             padding: '0px'
         }, 700);
         $(name).fadeOut();
+
     }
 
     document.onkeypress=function(e){
@@ -104,10 +105,12 @@ $(function () {
             hide_block(blocks.login);
             show_block(blocks.start_quizz);
         }
+
         event.preventDefault();
     });
 
     socket.on('connect', function () {
+
         setTimeout(function(){
 
             if (getCookie("user").includes('@')){
@@ -124,6 +127,7 @@ $(function () {
             }
         }, 200)
         
+
     });
 
 
