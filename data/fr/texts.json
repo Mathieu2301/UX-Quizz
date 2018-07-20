@@ -1,15 +1,27 @@
 {
     "texts": {
-        "NAME":"UX Quizz",
-        "head_description":"{INSERER_DESCRIPTION}",
-
-        "nav_home":"UX Quizz",
-        "nav_results":"Mes résultats",
-        
-        
-        "txtbox_ScreenName_label":"Nom de l'écran",
-        "txtbox_ScreenName_btn":"Commencer",
-
-        "inblock_description":"Description"
+        "main":{
+            "NAME":"UX Quizz"
+        },
+        "titles":{
+            "description_block":"Bienvenue",
+            "login_block":"Entrez votre email Murex",
+            "start_quizz_block":"Commencer le quizz"
+        },
+        "labels":{
+            "nav_home":"UX Quizz",
+            "nav_results":"Mes résultats"
+        },
+        "buttons":{
+            "next":"Suivant",
+            "start":"Commencer"
+        },
+        "txtboxs":{
+            "screenname_placeholder":"Nom de l'écran",
+            "login_placeholder":"prenom.nom"
+        },
+        "other":{
+            "description_block":"{INSERER_DESCRIPTION}"
+        }
     }
 }

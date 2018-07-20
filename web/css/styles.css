@@ -132,6 +132,8 @@
 }
 .demo-graphs {
   position: relative;
+  width: 100%;
+  height: 50%;
   left: 50px;
   opacity: 0;
   padding: 16px 32px;
@@ -171,6 +173,11 @@ _:-ms-input-placeholder, :root .demo-graph {
       -ms-flex-line-pack: start;
           align-content: flex-start;
 }
+
+.mdl-radio {
+  padding-right: 24px;
+}
+
 .demo-cards .demo-separator {
   height: 32px;
 }

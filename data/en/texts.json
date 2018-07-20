@@ -1,15 +1,27 @@
 {
     "texts": {
-        "NAME":"UX Quizz",
-        "head_description":"{INSERT_DESCRIPTION}",
-
-        "nav_home":"UX Quizz",
-        "nav_results":"My results",
-        
-        
-        "txtbox_ScreenName_label":"Screen name",
-        "txtbox_ScreenName_btn":"Start",
-
-        "inblock_description":"Description"
+        "main":{
+            "NAME":"UX Quizz"
+        },
+        "titles":{
+            "description_block":"Welcome",
+            "login_block":"Login with your MX email",
+            "start_quizz_block":"Start the quizz now"
+        },
+        "labels":{
+            "nav_home":"UX Quizz",
+            "nav_results":"My results"
+        },
+        "buttons":{
+            "next":"Next",
+            "start":"Start"
+        },
+        "txtboxs":{
+            "screenname_placeholder":"Screen name",
+            "login_placeholder":"Login"
+        },
+        "other":{
+            "description_block":"{INSERT_DESCRIPTION}"
+        }
     }
 }
