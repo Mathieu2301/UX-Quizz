@@ -6,57 +6,149 @@ $(function () {
 
     var blocks = {
         all: ".demo-graphs",
-        start_quizz: "block1"
+        description_block: "#description_block",
+        login: "#login_block",
+        start_quizz: "#start_quizz",
+        quizz_questions: "#quizz_questions"
     }
 
-    var language = "fr";
+    var language = "en";
+    if (getCookie('lang') != "fr" && getCookie('lang') != "en"){
+        setCookie('lang', 'en');
+    }
+    setLanguage(getCookie('lang'));
 
-    socket.emit('get_language', {lang: language, function(json_lang){
-        $(document).attr("title", json_lang.NAME);
-        $('.mdl-layout-title').text(json_lang.NAME);
+    function setLanguage(lang){
+        if (lang == "en"){
+            setCookie('lang', 'en');
+            language = "en";
 
-        $('meta[name=description]').attr("content", json_lang.head_description);
+            $('#setEN_btn').fadeOut();
+            $('#setFR_btn').fadeIn();
+        }else{
+            setCookie('lang', 'fr');
+            language = "fr";
 
-        $('#ux_quizz_btn').text(json_lang.nav_home);
-        $('#my_results_btn').text(json_lang.nav_results);
+            $('#setEN_btn').fadeIn();
+            $('#setFR_btn').fadeOut();
+        }
 
-        $('#screen_name_txtbox_label').text(json_lang.txtbox_ScreenName_label);
-        $('#screen_name_txtbox_btn').text(json_lang.txtbox_ScreenName_btn);
+        socket.emit('get_language', language, function(json_lang){
+            $(document).attr("title", json_lang.main.NAME);
+            $('.mdl-layout-title').text(json_lang.main.NAME);
+    
+            $('#ux_quizz_label').text(json_lang.labels.nav_home);
+            $('#my_results_label').text(json_lang.labels.nav_results);
+    
+            $('#login_block_title').text(json_lang.titles.login_block);
+            $('#username_txtbox_label').text(json_lang.txtboxs.login_placeholder)
+            $('#username_txtbox_btn').val(json_lang.buttons.next)
 
-        $('#description_txtlabel').text(json_lang.inblock_description);
-    }})
+            $('#start_quizz_block_title').text(json_lang.titles.start_quizz_block);
+            $('#screen_name_txtbox_label').text(json_lang.txtboxs.screenname_placeholder);
+            $('#screen_name_txtbox_btn').val(json_lang.buttons.start);
+    
+            $('#description_block_title').text(json_lang.titles.description_block + " " + getCookie('user'));
+            $('#description').text(json_lang.other.description_block);
+        
+            $('#questions_validate_btn').text(json_lang.buttons.next);
+
+
+        })
+    }
+    
+    $('#setEN_btn').on('click', function(){ setLanguage("en"); });
+    $('#setFR_btn').on('click', function(){ setLanguage("fr"); });
 
     function show_block(name){
+        $('#loading').fadeOut(200);
         $(name).animate({
-            left: '-=50px',
-            opacity: '1'
+            left: '0px',
+            opacity: '1',
+            height: '50%',
+            padding: "16px 32px"
         }, 700);
+        $(name).fadeIn();
     }
 
     function hide_block(name){
+        $('#loading').fadeIn(200);
         $(name).animate({
-            left: '+=50px',
-            opacity: '0'
+            left: '-100px',
+            opacity: '0',
+            height: '0px',
+            padding: '0px'
         }, 700);
+        $(name).fadeOut();
+
     }
 
     document.onkeypress=function(e){
         e=e||window.event;
         var key=e.which?e.which:event.keyCode;
-        notif("Key = " + key);
         console.log("Key = " + key);
     }
 
-    $("#block1").submit(function(event) {
-        var scr_name = $('#screen_name_txtbox').text();
-        alert("Creating a quizz for the screen : " + scr_name);
-        socket.emit('start_quizz', {user_name: getCookie('name'), screen_name: scr_name})
+    $("#start_quizz").submit(function(event) {
+        var scr_name = $('#screen_name_txtbox').val();
+        socket.emit('start_quizz', {user_name: getCookie('user'), screen_name: scr_name, language: language})
+        event.preventDefault();
+    });
+    
+    $("#login_block").submit(function(event) {
+        var user_name = $('#username_txtbox').val();
+        if (user_name.includes("@")){
+            notif('Please do not enter the "@murex.com"', "warn");
+        }else{
+            setCookie('user', user_name);
+
+            hide_block(blocks.login);
+            show_block(blocks.start_quizz);
+        }
+
         event.preventDefault();
     });
 
     socket.on('connect', function () {
-        show_block(blocks.all);
+
+        setTimeout(function(){
+
+            if (getCookie("user").includes('@')){
+                notif('Please do not enter the "@murex.com"', "warn");
+                setCookie('user', "");
+            }
+
+            if (getCookie("user") != ""){
+                show_block(blocks.description_block);
+                show_block(blocks.start_quizz);
+            }else{
+                show_block(blocks.description_block);
+                show_block(blocks.login);
+            }
+        }, 200)
+        
+
     });
+
+
+    socket.on('insert_question', function(id, title, description, text, callback){
+        hide_block(blocks.start_quizz);
+        show_block(blocks.quizz_questions);
+        $('#quizz_block_title').text(title);
+        $('#quizz_block_description').text(description);
+
+        var template = '<li class="mdl-list__item"><span class="mdl-list__item-primary-content" style="width: 50%;"><i class="material-icons" style="padding-right: 15px;bottom: 1px;position: relative;">add_circle</i><div id="question_text" style="width: 70%;">{text}​</div></span><span class="mdl-list__item-secondary-action"><label class="radio-container" for="{id}o1">Non<input type="radio" id="{id}o1" name="{id}" value="1"><span class="checkmark"></span></label><label class="radio-container" for="{id}o2">Partiellement<input type="radio" id="{id}o2" name="{id}" value="2"><span class="checkmark"></span></label><label class="radio-container" for="{id}o3">Oui<input type="radio" id="{id}o3" name="{id}" value="3"><span class="checkmark"></span></label><label class="radio-container" for="{id}o4">Non applicable<input type="radio" id="{id}o4" name="{id}" value="0"><span class="checkmark"></span></label></span></li>';
+        
+        var html = template.replace(/{id}/g, id).replace(/{text}/g, text);
+        $("#list-questions").append(html);
+
+
+        $('#questions_validate_btn').on("click", function(){
+            var answer = $('input[name='+id+']:checked').val()
+            callback(answer)
+        })
+    })
+    
 
     socket.on("disconnect", function(){
         hide_block(blocks.all);
@@ -83,6 +175,8 @@ $(function () {
         }
     }
 
+    socket.on('notif', function(text, type){ notif(text, type); })
+
     function notif(msg, type){
         var toast_msg = "";
         var toast_title = "";
@@ -93,22 +187,18 @@ $(function () {
         toast_msg = msg;
         toast_delay = 5000;
         if (type == "error"){
-            toast_title = "Erreur";
+            toast_title = "Error";
             toast_color = "red";
             toast_image = "iziToast-icon ico-error revealIn";
         }else if (type == "warn"){
-            toast_title = "Attention";
+            toast_title = "Error";
             toast_color = "yellow";
             toast_image = "iziToast-icon ico-warning revealIn";
         }else if (type == "success"){
             toast_color = "green";
             toast_image = "iziToast-icon ico-success revealIn";
-        }else if (type == "menuinfos"){
-            toast_title = "Raccourcis clavier :";
-            toast_color = "yellow";
-            toast_delay = 10000;
         }else{
-            toast_title = "Information";
+            toast_title = "Info";
             toast_color = "blue";
             toast_image = "iziToast-icon ico-info revealIn";
         }
@@ -177,9 +267,6 @@ $(function () {
     }
 
     function setCookie(name, value) {
-        var d = new Date();
-        d.setTime(d.getTime() + (365*24*60*60*1000));
-        var expires = "expires="+ d.toUTCString();
         document.cookie = name + "=" + value + ";365;path=/";
     }
 

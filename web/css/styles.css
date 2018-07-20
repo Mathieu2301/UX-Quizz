@@ -22,6 +22,16 @@
   height: 48px;
   border-radius: 24px;
 }
+
+h3 {
+  font-size: 30px;
+}
+
+h5 {
+  font-size: 18px;
+  font-weight: 400;
+}
+
 .demo-layout .mdl-layout__header .mdl-layout__drawer-button {
   color: rgba(0, 0, 0, 0.54);
 }
@@ -96,6 +106,12 @@
 .demo-layout .demo-navigation .mdl-navigation__link:hover {
   background-color: #00BCD4;
   color: #37474F;
+  -webkit-transition-property: background-color;
+  -webkit-transition-duration: 0.2s;
+  -webkit-transition-timing-function: ease;
+  transition-property: background-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 .demo-navigation .mdl-navigation__link .material-icons {
   font-size: 24px;
@@ -126,9 +142,12 @@
 }
 .demo-graphs {
   position: relative;
-  left: 50px;
+  width: 100%;
+  height: 50%;
+  left: 100px;
+  height: 0px;
+  padding: 0px;
   opacity: 0;
-  padding: 16px 32px;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -165,6 +184,72 @@ _:-ms-input-placeholder, :root .demo-graph {
       -ms-flex-line-pack: start;
           align-content: flex-start;
 }
+
+/* The container */
+.radio-container {
+  padding-right: 15px;
+  display: inline-flex;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.radio-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: -2px;
+  left: 8px;
+  height: 19px;
+  width: 19px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.radio-container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.radio-container input:checked ~ .checkmark {
+  background-color: rgb(233,30,99);
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio-container .checkmark:after {
+  top: 6px;
+  left: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: white;
+}
+
 .demo-cards .demo-separator {
   height: 32px;
 }

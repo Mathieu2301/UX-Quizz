@@ -1,0 +1,27 @@
+{
+    "texts": {
+        "main":{
+            "NAME":"UX Quizz"
+        },
+        "titles":{
+            "description_block":"Welcome",
+            "login_block":"Login with your Murex email",
+            "start_quizz_block":"Start the quizz now"
+        },
+        "labels":{
+            "nav_home":"UX Quizz",
+            "nav_results":"My results"
+        },
+        "buttons":{
+            "next":"Next",
+            "start":"Start"
+        },
+        "txtboxs":{
+            "screenname_placeholder":"Screen name",
+            "login_placeholder":"Login"
+        },
+        "other":{
+            "description_block":"{INSERT_DESCRIPTION}"
+        }
+    }
+}
