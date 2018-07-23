@@ -33,7 +33,7 @@ $(function () {
             $('#setFR_btn').fadeOut();
         }
 
-        socket.emit('get_language', language, function(json_lang){
+        socket.emit('get_texts', language, function(json_lang){
             $(document).attr("title", json_lang.main.NAME);
             $('.mdl-layout-title').text(json_lang.main.NAME);
     
@@ -61,7 +61,8 @@ $(function () {
     $('#setFR_btn').on('click', function(){ setLanguage("fr"); });
 
     function show_block(name){
-        $('#loading').fadeOut(200);
+        if ($("#loading").is(":visible")){$('#loading').fadeOut(200);}
+        
         $(name).animate({
             left: '0px',
             opacity: '1',
@@ -72,7 +73,8 @@ $(function () {
     }
 
     function hide_block(name){
-        $('#loading').fadeIn(200);
+        if ($("#loading").is(":hidden")){$('#loading').fadeIn(200);}
+
         $(name).animate({
             left: '-100px',
             opacity: '0',
@@ -91,7 +93,8 @@ $(function () {
 
     $("#start_quizz").submit(function(event) {
         var scr_name = $('#screen_name_txtbox').val();
-        socket.emit('start_quizz', {user_name: getCookie('user'), screen_name: scr_name, language: language})
+
+        socket.emit('get_quizz', {user_name: getCookie('user'), screen_name: scr_name, language: language})
         event.preventDefault();
     });
     
@@ -130,23 +133,49 @@ $(function () {
 
     });
 
+    socket.on('del_questions', function(){
+        $('.question').remove();
+        questions = {};
+    })
 
-    socket.on('insert_question', function(id, title, description, text, callback){
+    var questions = {};
+
+    socket.on('insert_question', function(id, title, tag_description, tag_text){
         hide_block(blocks.start_quizz);
         show_block(blocks.quizz_questions);
-        $('#quizz_block_title').text(title);
-        $('#quizz_block_description').text(description);
 
-        var template = '<li class="mdl-list__item"><span class="mdl-list__item-primary-content" style="width: 50%;"><i class="material-icons" style="padding-right: 15px;bottom: 1px;position: relative;">add_circle</i><div id="question_text" style="width: 70%;">{text}​</div></span><span class="mdl-list__item-secondary-action"><label class="radio-container" for="{id}o1">Non<input type="radio" id="{id}o1" name="{id}" value="1"><span class="checkmark"></span></label><label class="radio-container" for="{id}o2">Partiellement<input type="radio" id="{id}o2" name="{id}" value="2"><span class="checkmark"></span></label><label class="radio-container" for="{id}o3">Oui<input type="radio" id="{id}o3" name="{id}" value="3"><span class="checkmark"></span></label><label class="radio-container" for="{id}o4">Non applicable<input type="radio" id="{id}o4" name="{id}" value="0"><span class="checkmark"></span></label></span></li>';
+        $('#quizz_block_title').text(title);
+        $('#quizz_block_description').text(tag_description);
+
+        var template = '<li class="mdl-list__item question"><span class="mdl-list__item-primary-content" style="width: 50%;"><i class="material-icons" style="padding-right: 15px;bottom: 1px;position: relative;">add_circle</i><div id="question_text" style="width: 70%;">{text}​</div></span><span class="mdl-list__item-secondary-action"><label class="radio-container" for="{id}o1">Non<input type="radio" id="{id}o1" name="{id}" value="1" checked><span class="checkmark"></span></label><label class="radio-container" for="{id}o2">Partiellement<input type="radio" id="{id}o2" name="{id}" value="2"><span class="checkmark"></span></label><label class="radio-container" for="{id}o3">Oui<input type="radio" id="{id}o3" name="{id}" value="3"><span class="checkmark"></span></label><label class="radio-container" for="{id}o4">Non applicable<input type="radio" id="{id}o4" name="{id}" value="0"><span class="checkmark"></span></label></span></li>';
         
-        var html = template.replace(/{id}/g, id).replace(/{text}/g, text);
+        var html = template.replace(/{id}/g, id).replace(/{text}/g, tag_text);
         $("#list-questions").append(html);
 
+        questions[id] = "_";
 
-        $('#questions_validate_btn').on("click", function(){
-            var answer = $('input[name='+id+']:checked').val()
-            callback(answer)
-        })
+        //console.log('ID = ' + id + " | TITLE = " + title + " | TAG_DESCRIPTION = " + tag_description + " | TAG_TEXT = " + tag_text);
+    })
+
+    $('#questions_validate_btn').on("click", function(){
+        var return_ = false;
+
+        $.each(questions, function(question_id, answer){
+
+            questions[question_id] = $('input[name='+question_id+']:checked').val();
+
+            if (questions[question_id] == undefined){
+                notif("Please answer to all questions.", "warn")
+                return_ = true;
+                return false;
+            }
+        });
+
+        if (!return_){
+            socket.emit('save_quizz', questions);
+
+
+        }
     })
     
 
@@ -154,11 +183,11 @@ $(function () {
         hide_block(blocks.all);
     });
 
-    socket.on('user-connected', function(id){
+    socket.on('user-connected', function(){
         notif("Un utilisateur s'est connecté", "info");
     });
 
-    socket.on('user-disconnected', function(id){
+    socket.on('user-disconnected', function(){
         notif("Un utilisateur s'est déconnecté", "info");
     });
 
