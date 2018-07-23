@@ -14,7 +14,8 @@
         },
         "buttons":{
             "next":"Next",
-            "start":"Start"
+            "start":"Start",
+            "cancel":"Cancel"
         },
         "txtboxs":{
             "screenname_placeholder":"Screen name",

@@ -18,14 +18,19 @@ io.on('connection', function(client){
         var screen_name = data.screen_name;
         var lang = data.language;
         var step = 0;
+        var quizz_score = [];
+        var start_date = Date.now();
+        var topics = [];
 
         var questions_json = require("./data/"+lang+"/questions.json").questions;
         var topics_json = require("./data/"+lang+"/topics.json").heuristiques;
 
+        topics_json.forEach(topic => { topics.push(topic.label); })
+
         if (user_name != "" && screen_name != ""){
             
             function getQuizzTopic(topic_id){
-    
+
                 client.emit('del_questions');
     
                 var topic_actuel = 0;
@@ -47,18 +52,19 @@ io.on('connection', function(client){
                         });
 
                     }
-
+                    
                     ++topic_actuel;   
                 });
 
-                ++step;
+                ++step;       
             }
 
             getQuizzTopic(step);
 
             client.on('save_quizz', function(questions){
 
-                var score = [];
+                var score = 0;
+                
         
                 var moy_divis = 0;
         
@@ -68,25 +74,49 @@ io.on('connection', function(client){
                     var answer = questions[question_full_id];
         
                     if (answer == 1){
-                        score[step] += 0;
+                        score += 0;
                         moy_divis++;
                     }else if (answer == 2){
-                        score[step] += 50;
+                        score += 50;
                         moy_divis++;
                     }else if (answer == 3){
-                        score[step] += 100;
+                        score += 100;
                         moy_divis++;
                     }
         
                 });
         
-                score[step] = Math.round(score / moy_divis);
-                console.log(score[step]);
+                quizz_score[step-1] = Math.round(score / moy_divis);
+                console.log(quizz_score);
 
-                if (step != topics_json.lenght){
+                console.log("step = " + step + " | len = " + Object.keys(topics_json).length);
+                if (step != Object.keys(topics_json).length){
                     getQuizzTopic(step);
                 }else{
-                    console.log()
+                    console.log(quizz_score)
+                    var json_screen_results_file = {
+                        user: user_name,
+                        screen_name: screen_name,
+                        topics: topics,
+                        score: quizz_score,
+                        start_date: start_date,
+                        finish_date: Date.now(),
+                        language: lang
+                    }
+
+                    if (fs.existsSync("./data/results/"+user_name+"/")){
+                        
+                        fs.writeFile("./data/results/"+user_name+"/"+json_screen_results_file.finish_date+".json", JSON.stringify(json_screen_results_file), function(err){
+                            if (err){
+                                client.emit('notif', "An error has occurred", "error")
+                            }else{
+                                client.emit('notif', "The quiz has been saved", "success")
+                                client.emit('show_result', json_screen_results_file);
+                            }
+                        });
+                    }else{
+                        client.emit('notif', "Please check your email ("+ user_name +"@murex.com)", "warn")
+                    }
                 }
             })
 

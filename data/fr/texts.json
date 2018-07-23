@@ -14,7 +14,8 @@
         },
         "buttons":{
             "next":"Suivant",
-            "start":"Commencer"
+            "start":"Commencer",
+            "cancel":"Annuler"
         },
         "txtboxs":{
             "screenname_placeholder":"Nom de l'écran",
