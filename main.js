@@ -125,6 +125,22 @@ io.on('connection', function(client){
         }
     })
 
+    client.on('get_result', function(user, screen_name){
+
+        var dir = './data/results/'+user+'/';
+
+        fs.readdir(dir, (err, files) => {
+            files.forEach(file => {
+                var json = require(dir+file);
+                if (json.screen_name == screen_name){
+                    client.emit('show_result', json);
+                }
+            });
+        })
+
+        
+    })
+
     client.on('get_texts', function(lang, callback){
         callback(require("./data/"+lang+"/texts.json").texts);
     })

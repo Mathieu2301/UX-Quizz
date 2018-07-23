@@ -95,6 +95,9 @@ $(function () {
 
     $('#my_results_btn').on("click", function(){
         show_block(blocks.my_results)
+        
+        show_block(blocks.result)
+        socket.emit('get_result', getCookie('user'), 'test_screen')
     })
 
     document.onkeypress=function(e){
@@ -209,18 +212,14 @@ $(function () {
                     backgroundColor: ['rgba(255, 99, 132, 0.2)'],
                     borderColor: ['rgba(255,99,132,1)'],
                     borderWidth: 3
+                },
+                {
+                    label: "",
+                    data: [100, 0]
                 }]
             },
             options: {
-                responsive: true,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            suggestedMin: 20,
-                            suggestedMax: 30
-                        }
-                    }]
-                } 
+
             }
         });
 
