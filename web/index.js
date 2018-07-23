@@ -9,7 +9,9 @@ $(function () {
         description_block: "#description_block",
         login: "#login_block",
         start_quizz: "#start_quizz",
-        quizz_questions: "#quizz_questions"
+        quizz_questions: "#quizz_questions",
+        result: "#result_block",
+        my_results: "#my_results_block"
     }
 
     var language = "en";
@@ -52,6 +54,7 @@ $(function () {
             $('#description').text(json_lang.other.description_block);
         
             $('#questions_validate_btn').text(json_lang.buttons.next);
+            $('#questions_cancel_btn').text(json_lang.buttons.cancel);
 
 
         })
@@ -60,6 +63,7 @@ $(function () {
     $('#setEN_btn').on('click', function(){ setLanguage("en"); });
     $('#setFR_btn').on('click', function(){ setLanguage("fr"); });
 
+    socket.on('show_block', function(name){show_block(name);});
     function show_block(name){
         if ($("#loading").is(":visible")){$('#loading').fadeOut(200);}
         
@@ -72,8 +76,9 @@ $(function () {
         $(name).fadeIn();
     }
 
-    function hide_block(name){
-        if ($("#loading").is(":hidden")){$('#loading').fadeIn(200);}
+    socket.on('hide_block', function(name){hide_block(name);});
+    function hide_block(name, load=true){
+        if ($("#loading").is(":hidden") && load){$('#loading').fadeIn(200);}
 
         $(name).animate({
             left: '-100px',
@@ -82,8 +87,15 @@ $(function () {
             padding: '0px'
         }, 700);
         $(name).fadeOut();
-
     }
+
+    $('#ux_quizz_btn').on("click", function(){
+        hide_block(blocks.my_results, false)
+    })
+
+    $('#my_results_btn').on("click", function(){
+        show_block(blocks.my_results)
+    })
 
     document.onkeypress=function(e){
         e=e||window.event;
@@ -157,6 +169,13 @@ $(function () {
         //console.log('ID = ' + id + " | TITLE = " + title + " | TAG_DESCRIPTION = " + tag_description + " | TAG_TEXT = " + tag_text);
     })
 
+    $('#questions_cancel_btn').on("click", function(){
+        show_block(blocks.start_quizz);
+        hide_block(blocks.quizz_questions, false)
+        $('.question').remove();
+        questions = {};
+    })
+
     $('#questions_validate_btn').on("click", function(){
         var return_ = false;
 
@@ -173,11 +192,65 @@ $(function () {
 
         if (!return_){
             socket.emit('save_quizz', questions);
-
-
         }
     })
     
+    socket.on('show_result', function(data){
+        
+
+        var ctx = document.getElementById("result-chart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: data.topics,
+                datasets: [{
+                    label: data.screen_name,
+                    data: data.score,
+                    backgroundColor: ['rgba(255, 99, 132, 0.2)'],
+                    borderColor: ['rgba(255,99,132,1)'],
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            suggestedMin: 20,
+                            suggestedMax: 30
+                        }
+                    }]
+                } 
+            }
+        });
+
+        $('#result_block_title').text(data.screen_name)
+
+        $('.list_desc_item').remove();
+
+        var list_desc = $('#list-description');
+        
+        list_desc.append("<li class='list_desc_item'>SCREEN_NAME = " + data.screen_name + "</li>");
+        list_desc.append("<li class='list_desc_item'>USER_NAME = " + data.user + "</li>");
+        list_desc.append("<li class='list_desc_item'>START_DATE = " + new Date(data.start_date) + "</li>");
+        list_desc.append("<li class='list_desc_item'>FINISH_DATE = " + new Date(data.finish_date) + "</li>");
+        list_desc.append("<li class='list_desc_item'>LANGUAGE = " + data.language + "</li>");
+        list_desc.append("<li class='list_desc_item'>======" + "</li>");
+
+        var i = 0;
+        data.topics.forEach(topic => {
+            list_desc.append("<li class='list_desc_item'>" + topic + " = " + data.score[i] + "</li>");
+            ++i;
+        });
+
+        show_block(blocks.result)
+
+        show_block(blocks.start_quizz);
+        hide_block(blocks.quizz_questions, false)
+        $('.question').remove();
+        questions = {};
+
+    })
 
     socket.on("disconnect", function(){
         hide_block(blocks.all);

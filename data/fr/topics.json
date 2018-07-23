@@ -13,6 +13,27 @@
             "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
             "goals" : 
                 ["Inutile"]
+        },
+        {
+            "name": "questions_debiles2",
+            "label": "Questions débiles 2",
+            "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
+            "goals" : 
+                ["Inutile"]
+        },
+        {
+            "name": "questions_debiles3",
+            "label": "Questions débiles 3",
+            "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
+            "goals" : 
+                ["Inutile"]
+        },
+        {
+            "name": "questions_debiles4",
+            "label": "Questions débiles 4",
+            "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
+            "goals" : 
+                ["Inutile"]
         }
     ]
 }

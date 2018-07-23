@@ -41,9 +41,6 @@
           <span class="mdl-layout-title">UX Quizz</span>
           <div class="mdl-layout-spacer"></div>
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-            <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-              <i class="material-icons">search</i>
-            </label>
             <div class="mdl-textfield__expandable-holder">
               <input class="mdl-textfield__input" type="text" id="search">
               <label class="mdl-textfield__label" for="search">Enter your query...</label>
@@ -85,7 +82,7 @@
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input class="mdl-textfield__input" type="text" id="username_txtbox" style="width: 65%;">
                   <label class="mdl-textfield__label" id="username_txtbox_label" for="username_txtbox">Login</label>
-                  <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="username_txtbox_btn" type="submit" style="left: 105%" value="Suivant">
+                  <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="username_txtbox_btn" type="submit" style="left: 105%" value="Suivant">
                   <label style="position: absolute; left: 67%; bottom: 38%;">@murex.com</label>
                 </div>
               </form>
@@ -98,7 +95,7 @@
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input class="mdl-textfield__input" type="text" id="screen_name_txtbox">
                   <label class="mdl-textfield__label" id="screen_name_txtbox_label" for="screen_name_txtbox">Screen name</label>
-                  <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="screen_name_txtbox_btn" type="submit" style="left: 105%" value="Commencer">
+                  <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="screen_name_txtbox_btn" type="submit" style="left: 105%" value="Commencer">
                 </div>
               </form>
           </div>
@@ -108,13 +105,30 @@
               <h3 id="quizz_block_title"></h3>
               <h5 id="quizz_block_description" style="font-size: 15px;"></h5>
               <ul id="list-questions" class="demo-list-control mdl-list"></ul>
-              <button id="questions_validate_btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"></button>
-          </div>          
+              <div style="width: 100%;">
+                <button id="questions_cancel_btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="width: 48%;"></button>
+                <button id="questions_validate_btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width: 48%; left: 2%;"></button>
+              </div>
+          </div>
+
+            <!-- Block qui contient UN SEUL graphique de stats -->
+          <div id="result_block" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
+              <h3 id="result_block_title"></h3>
+              <ul id="list-description" class="demo-list-control mdl-list"></ul>
+              <canvas id="result-chart" width="512" height="256" class="chartjs-render-monitor" style="display: block; width: 512px; height: 256px;"></canvas>
+          </div>
+
+            <!-- Block qui contient la listes des résultats -->
+          <div id="my_results_block" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
+              <h3 id="my_result_block_title"></h3>
+              
+          </div>
         </div>
       </main>
     </div>
     
-    <script src="https://code.getmdl.io/1.3.0/material.min.js" id="mdl_script"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/izitoast.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
