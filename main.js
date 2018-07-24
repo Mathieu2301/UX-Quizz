@@ -12,9 +12,9 @@ app.use(require('express').static("web"));
 io.on('connection', function(client){
     connected_users++
     console.log("Connect : " + client.id.substr(-4))
-    console.log("Connected : " + connected_users)
+    console.log("Online : " + connected_users)
     
-    io.sockets.emit('notif', "User connected : " + client.id.substr(-4), "info");
+    io.sockets.emit('notif', "Online : " + connected_users, "info");
   
     client.on('get_quizz', function(data){
 
@@ -122,6 +122,11 @@ io.on('connection', function(client){
                             }else{
                                 client.emit('notif', "The quiz has been saved", "success")
                                 client.emit('show_result', json_screen_results_file);
+                                client.emit('add_result_to_list', {
+                                    screen_name: json_screen_results_file.screen_name,
+                                    score: json_screen_results_file.average,
+                                    date: json_screen_results_file.finish_date
+                                });
                             }
                         });
                     }else{
@@ -135,20 +140,33 @@ io.on('connection', function(client){
         }
     })
 
-    client.on('get_result', function(user, screen_name){
+    client.on('get_result', function(user, date){
 
         var dir = './data/results/'+user+'/';
 
         fs.readdir(dir, (err, files) => {
+            if(err) throw err
             files.forEach(file => {
                 var json = require(dir+file);
-                if (json.screen_name == screen_name){
+                if (json.finish_date == date){
                     client.emit('show_result', json);
                 }
             });
         })
+    })
 
-        
+    client.on('get_results', function(user){
+        var dir = './data/results/'+user;
+        console.log(dir);
+        client.emit('delete_results_of_table');
+
+        fs.readdir(dir, (err, files) => {
+            if(err) throw err
+            files.forEach(file => {
+                var json = require(dir+file);
+                client.emit('add_result_to_table', {screen_name: json.screen_name, score: json.average, date: json.finish_date});
+            });
+        })
     })
 
     client.on('get_texts', function(lang, callback){
@@ -158,9 +176,9 @@ io.on('connection', function(client){
     client.on('disconnect', function(){
         connected_users--
         console.log("Disconn : " + client.id.substr(-4))
-        console.log("Connected : " + connected_users)
+        console.log("Online : " + connected_users)
         
-        io.sockets.emit('notif', "User disconnected : " + client.id.substr(-4), "info");
+        io.sockets.emit('notif', "Online : " + connected_users, "info");
     });
 });
 

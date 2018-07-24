@@ -40,12 +40,6 @@
         <div class="mdl-layout__header-row">
           <span class="mdl-layout-title">UX Quizz</span>
           <div class="mdl-layout-spacer"></div>
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-            <div class="mdl-textfield__expandable-holder">
-              <input class="mdl-textfield__input" type="text" id="search">
-              <label class="mdl-textfield__label" for="search">Enter your query...</label>
-            </div>
-          </div>
           <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
             <i class="material-icons">language</i>
           </button>
@@ -111,71 +105,33 @@
               </div>
           </div>
 
-            <!-- Block qui contient UN SEUL graphique de stats -->
-          <div id="result_block" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
-              <h3 id="result_block_title"></h3>
-              <div style="display: inline-flex;">
-                <ul id="list-description" class="demo-list-control mdl-list"></ul>
-                <div style="width: 50%;">
-                  <canvas id="result-chart"></canvas>
-                </div>
-              </div>
-          </div>
+            <!-- Ligne qui contient 2 blocks -->
+          <div style="display:inline-flex;width: 100%;display: inline-flex;height: 50%;left: 0px;">
 
-            <!-- Block qui contient la listes des résultats -->
-          <div id="my_results_block" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
-              <h3 id="my_result_block_title"></h3>
-              <table class="mdl-data-table mdl-js-data-table" style="width: 0%;">
-                  <thead>
-                    <tr>
-                      <th>Incitation</th>
-                      <th>Questions débiles</th>
-                      <th>Questions débiles 2</th>
-                      <th>Questions débiles 3</th>
-                      <th>Questions débiles 4</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>40</td>
-                      <td>40</td>
-                      <td>40</td>
-                      <td>40</td>
-                      <td>40</td>
-                    </tr>
-                  </tbody>
-              </table>
-            </br></br></br>
-              <table class="mdl-data-table mdl-js-data-table" style="width: 0%;">
+              <!-- Block qui contient la listes des résultats -->
+            <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 45%;">
+                <h3 id="my_result_block_title"></h3>
+                <table class="mdl-data-table mdl-js-data-table">
                     <thead>
                       <tr>
-                        <th>Topic</th>
-                        <th>Points</th>
+                        <th class="mdl-data-table__cell--non-numeric">Nom de l'écran</th>
+                        <th>Score</th>
+                        <th class="mdl-data-table__cell--non-numeric">Date</th>
+                        <th>Delete</th>
                       </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Incitation</td>
-                      <td>40</td>
-                    </tr>
-                    <tr>
-                      <td>Questions débiles</td>
-                      <td>40</td>
-                    </tr>
-                    <tr>
-                      <td>Questions débiles 2</td>
-                      <td>40</td>
-                    </tr>
-                    <tr>
-                      <td>Questions débiles 3</td>
-                      <td>40</td>
-                    </tr>
-                    <tr>
-                      <td>Questions débiles 4</td>
-                      <td>40</td>
-                    </tr>
-                  </tbody>
-              </table>
+                    </thead>
+                    <tbody id="list_results">
+                    </tbody>
+                </table>
+            </div>
+
+              <!-- Block qui contient UN SEUL graphique de stats -->
+            <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 65%;">
+                <h3 id="result_block_title"></h3>
+                <div style="top: -1em; position: relative; width: 100%; height: 25em;">
+                  <canvas id="result-chart"></canvas>
+                </div>
+            </div>
           </div>
         </div>
       </main>
