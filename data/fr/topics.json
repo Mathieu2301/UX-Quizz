@@ -3,58 +3,58 @@
         {
             "name": "guidage",
             "label": "Guidage",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ L’ensemble des moyens mis en oeuvre pour conseiller, orienter, informer et conduire l’utilisateur lors de ses interactions avec un système. }",
             "goals" : 
-                ["Inutile"]
+                ["Faciliter l’apprentissage et l’utilisation."]
         },
         {
             "name": "charge_trav",
             "label": "Charge de travail",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ L’ensemble des éléments de l’interface qui ont pour rôle de réduire la charge perceptive et mnésique des utilisateurs. }",
             "goals" : 
-                ["Inutile"]
+                ["Moins de risques d’erreurs", "Moins de distraction", "Plus d’efficacité"]
         },
         {
             "name": "ctrl_expl",
             "label": "Contrôle explicite",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ Le contrôle que les utilisateurs ont sur le traitement de leurs actions. }",
             "goals" : 
-                ["Inutile"]
+                ["Moins d’ambiguïté et d’erreurs", "Facteur de compréhension du système"]
         },
         {
             "name": "adaptab",
             "label": "Adaptabilité",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ Capacité du système à réagir selon le contexte, préférence, et besoins d’utilisateurs. }",
             "goals" : 
-                ["Inutile"]
+                ["Faciliter l’adaptation et l’apprentissage de l’utilisateur au système"]
         },
         {
             "name": "gestion_err",
             "label": "Gestion des erreurs",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ L'ensemble des moyens permettant d’une part d’éviter ou de réduire les erreurs, et d’autre part de les corriger lorsqu’elles surviennent.  }",
             "goals" : 
-                ["Inutile"]
+                ["Moins d’interruptions au cours de la réalisation d’une tâche et meilleure performance."]
         },
         {
             "name": "homogeneite",
             "label": "Homogénéité",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ La façon avec laquelle les choix de conception de l’interface (codes, dénominations, formats, procédures, etc.) sont conservés pour des contextes identiques, et sont différents pour des contextes différents. }",
             "goals" : 
-                ["Inutile"]
+                ["Diminuer les erreurs et le temps de recherche", "Diminuer le refus d’utilisation d’interface"]
         },
         {
             "name": "signicodes",
             "label": "Signifiance des codes",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ L’adéquation entre l’objet ou l’information affichée ou entrée, et son référent. Des codes et dénominations “signifiants” disposent d’une relation sémantique forte avec leur référent. }",
             "goals" : 
-                ["Inutile"]
+                ["Meilleurs rappel et reconnaissance", "Moins d’erreurs"]
         },
         {
             "name": "comptabilite",
             "label": "Compatibilité",
-            "description" : "{ INSÉRER DESCRIPTION }",
+            "description" : "{ L’accord existant entre les caractéristiques des utilisateurs (mémoire, perceptions, habitudes, compétences, etc.) et des tâches, d’une part, et l’organisation des sorties, entrées et dialogue d’une application donnée, d’autre part. Le degré de similitude entre divers environnements ou applications. }",
             "goals" : 
-                ["Inutile"]
+                ["Le transfert d’information d’un contexte à un autre est plus rapide.", "Plus d’efficacité", "Meilleure performance"]
         }
     ]
 }
