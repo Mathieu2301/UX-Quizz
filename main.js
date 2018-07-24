@@ -14,7 +14,7 @@ io.on('connection', function(client){
     console.log("Connect : " + client.id.substr(-4))
     console.log("Online : " + connected_users)
     
-    io.sockets.emit('notif', "Online : " + connected_users, "info");
+    io.sockets.emit('users_online', connected_users);
   
     client.on('get_quizz', function(data){
 
@@ -40,10 +40,6 @@ io.on('connection', function(client){
                 var topic_actuel = 0;
     
                 topics_json.forEach(topic => {
-                    // topic.name;
-                    // topic.label;
-                    // topic.description;
-                    // topic.goals[];
     
                     if (topic_actuel == topic_id){
                         var question_actuelle = 0;
@@ -54,9 +50,7 @@ io.on('connection', function(client){
                             }
                             ++question_actuelle;
                         });
-
                     }
-                    
                     ++topic_actuel;   
                 });
 
@@ -68,8 +62,6 @@ io.on('connection', function(client){
             client.on('save_quizz', function(questions){
 
                 var score = 0;
-                
-        
                 var moy_divis = 0;
         
                 Object.keys(questions).map(function(question_full_id) {
@@ -130,7 +122,7 @@ io.on('connection', function(client){
                             }
                         });
                     }else{
-                        client.emit('notif', "Please check your email ("+ user_name +"@murex.com)", "warn")
+                        client.emit('notif', "Please check your email ("+ user_name +"@murex.com) before doing that", "warn")
                     }
                 }
             })
@@ -156,20 +148,37 @@ io.on('connection', function(client){
     })
 
     client.on('get_results', function(user){
-        var dir = './data/results/'+user;
-        console.log(dir);
+        var dir = './data/results/'+user+'/';
+
         client.emit('delete_results_of_table');
 
         fs.readdir(dir, (err, files) => {
-            console.log('a- ' + files)
-            if(err) throw err
+            if(err){ client.emit('notif', "Please check your email ("+ user +"@murex.com) before doing that", "warn"); return; }
+
             files.forEach(file => {
+                var a = false;
+                var json = {};
+
                 try{
-                    var json = require(dir+file);
-                    client.emit('add_result_to_table', {screen_name: json.screen_name, score: json.average, date: json.finish_date});
-                }catch(ex){}
+                    json = require(dir+file);
+                    a = true;
+                }catch(ex){
+                    client.emit('notif', "You are not connected", "error")
+                }
+
+                if (a) client.emit('add_result_to_table', {screen_name: json.screen_name, score: json.average, date: json.finish_date});
             });
         })
+    })
+
+    client.on('remove_result', function(user, date){
+        var dir = './data/results/'+user+'/'+date+'.json';
+        var a = false;
+        try{
+            fs.unlinkSync(dir);
+            a = true;
+        }catch(ex){}
+        if (a) client.emit('notif', "The result has been deleted", "success")
     })
 
     client.on('get_texts', function(lang, callback){
@@ -181,7 +190,7 @@ io.on('connection', function(client){
         console.log("Disconn : " + client.id.substr(-4))
         console.log("Online : " + connected_users)
         
-        io.sockets.emit('notif', "Online : " + connected_users, "info");
+        io.sockets.emit('users_online', connected_users);
     });
 });
 

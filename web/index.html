@@ -54,6 +54,7 @@
           <a class="mdl-navigation__link" id="ux_quizz_btn" href="javascript:void(0)"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">question_answer</i><div id="ux_quizz_label">UX Quizz</div></a>
           <a class="mdl-navigation__link" id="my_results_btn" href="javascript:void(0)"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">poll</i><div id="my_results_label">My results</div></a>
         </nav>
+        <h5 id="online_users_label" style="font-size: 12px;padding: 0 1em;">Online : 0</h5>
       </div>
       <main class="mdl-layout__content mdl-color--grey-100">
         
@@ -64,9 +65,7 @@
             <!-- Block de description -->
           <div id="description_block" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
             <h3 id="description_block_title"></h3>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-              <h5 id="description"></h5>
-            </div>
+            <h5 id="description"></h5>
           </div>
 
             <!-- Block de login -->
@@ -109,15 +108,16 @@
           <div style="display:inline-flex;width: 100%;display: inline-flex;height: 50%;left: 0px;">
 
               <!-- Block qui contient la listes des résultats -->
-            <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 45%;">
+            <div id="results_1" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 45%;">
                 <h3 id="my_result_block_title"></h3>
-                <table class="mdl-data-table mdl-js-data-table">
+                <h5 id="my_result_block_error" style="font-size: 15px;"></h5>
+                <table class="mdl-data-table mdl-js-data-table" id="results_table" style="margin-bottom: 1em;">
                     <thead>
                       <tr>
-                        <th class="mdl-data-table__cell--non-numeric">Nom de l'écran</th>
-                        <th>Score</th>
-                        <th class="mdl-data-table__cell--non-numeric">Date</th>
-                        <th>Delete</th>
+                        <th class="mdl-data-table__cell--non-numeric" id="my_result_table_screen_name">Nom de l'écran</th>
+                        <th class="mdl-data-table__cell--non-numeric" id="my_result_table_score">Score</th>
+                        <th class="mdl-data-table__cell--non-numeric" id="my_result_table_date">Date</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody id="list_results">
@@ -126,7 +126,7 @@
             </div>
 
               <!-- Block qui contient UN SEUL graphique de stats -->
-            <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 65%;">
+            <div id="results_2" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 65%;">
                 <h3 id="result_block_title"></h3>
                 <div style="top: -1em; position: relative; width: 100%; height: 25em;">
                   <canvas id="result-chart"></canvas>
