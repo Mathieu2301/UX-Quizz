@@ -161,10 +161,13 @@ io.on('connection', function(client){
         client.emit('delete_results_of_table');
 
         fs.readdir(dir, (err, files) => {
+            console.log('a- ' + files)
             if(err) throw err
             files.forEach(file => {
-                var json = require(dir+file);
-                client.emit('add_result_to_table', {screen_name: json.screen_name, score: json.average, date: json.finish_date});
+                try{
+                    var json = require(dir+file);
+                    client.emit('add_result_to_table', {screen_name: json.screen_name, score: json.average, date: json.finish_date});
+                }catch(ex){}
             });
         })
     })

@@ -18,14 +18,10 @@
         },
         {
             "txt" : "J’ai fourni des indices sur la longueur autorisée des entrées dans un champ",
-            "topic" : 0
+            "topic" : 1
         },
         {
             "txt" : "J’ai intégré des éléments dynamiques pour capter le regard​​",
-            "topic" : 0
-        },
-        {
-            "txt" : "J’aime le chocolat​​",
             "topic" : 1
         },
         {
@@ -35,18 +31,6 @@
         {
             "txt" : "J’aime le chocolat​​",
             "topic" : 1
-        },
-        {
-            "txt" : "J’aime le chocolat​​",
-            "topic" : 1
-        },
-        {
-            "txt" : "J’aime le chocolat​​",
-            "topic" : 2
-        },
-        {
-            "txt" : "J’aime le chocolat​​",
-            "topic" : 2
         },
         {
             "txt" : "J’aime le chocolat​​",
@@ -71,42 +55,58 @@
         {
             "txt" : "J’aime le chocolat​​",
             "topic" : 3
+        },
+        {
+            "txt" : "J’aime le chocolat​​",
+            "topic" : 3
+        },
+        {
+            "txt" : "J’aime le chocolat​​",
+            "topic" : 4
+        },
+        {
+            "txt" : "J’aime le chocolat​​",
+            "topic" : 4
+        },
+        {
+            "txt" : "J’aime le chocolat​​",
+            "topic" : 4
         },
         {
             "txt" : "J’ai mangé du chocolat​​",
-            "topic" : 3
+            "topic" : 5
         },
         {
             "txt" : "J’aime le chocolat​​",
-            "topic" : 3
+            "topic" : 5
         },
         {
             "txt" : "J’aime le chocolat​​",
-            "topic" : 3
+            "topic" : 5
         },
         {
             "txt" : "J’aime le chocolat​​",
-            "topic" : 3
+            "topic" : 6
         },
         {
             "txt" : "J’aime le chocolat​​",
-            "topic" : 4
+            "topic" : 6
         },
         {
             "txt" : "J’aime le chocolat​​",
-            "topic" : 4
+            "topic" : 6
         },
         {
             "txt" : "Coucou​​",
-            "topic" : 4
+            "topic" : 7
         },
         {
             "txt" : "J’aime le chocolat​​",
-            "topic" : 4
+            "topic" : 7
         },
         {
             "txt" : "J’aime le chocolat​​",
-            "topic" : 4
+            "topic" : 7
         }
     ]
 }

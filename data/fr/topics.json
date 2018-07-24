@@ -1,37 +1,58 @@
 {
     "heuristiques": [
         {
-            "name": "incitation",
-            "label": "Incitation",
-            "description" : "Les informations permettant aux utilisateurs de savoir où ils sont, d’identifier l’état ou contexte dans lequel ils se trouvent, de même que les outils d’aide et leur accessibilité.​",
-            "goals" : 
-                ["Faciliter la navigation par fonctionnalité et éviter les erreurs."] 
-        },
-        {
-            "name": "questions_debiles",
-            "label": "Questions débiles",
-            "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
+            "name": "guidage",
+            "label": "Guidage",
+            "description" : "{ INSÉRER DESCRIPTION }",
             "goals" : 
                 ["Inutile"]
         },
         {
-            "name": "questions_debiles2",
-            "label": "Questions débiles 2",
-            "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
+            "name": "charge_trav",
+            "label": "Charge de travail",
+            "description" : "{ INSÉRER DESCRIPTION }",
             "goals" : 
                 ["Inutile"]
         },
         {
-            "name": "questions_debiles3",
-            "label": "Questions débiles 3",
-            "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
+            "name": "ctrl_expl",
+            "label": "Contrôle explicite",
+            "description" : "{ INSÉRER DESCRIPTION }",
             "goals" : 
                 ["Inutile"]
         },
         {
-            "name": "questions_debiles4",
-            "label": "Questions débiles 4",
-            "description" : "Ce genre de question ne sert absolument à rien, c'est juste utilisé pour faire des tests en fait... (Même si c'est assez important de savoir si tu aime le chocolat...)",
+            "name": "adaptab",
+            "label": "Adaptabilité",
+            "description" : "{ INSÉRER DESCRIPTION }",
+            "goals" : 
+                ["Inutile"]
+        },
+        {
+            "name": "gestion_err",
+            "label": "Gestion des erreurs",
+            "description" : "{ INSÉRER DESCRIPTION }",
+            "goals" : 
+                ["Inutile"]
+        },
+        {
+            "name": "homogeneite",
+            "label": "Homogénéité",
+            "description" : "{ INSÉRER DESCRIPTION }",
+            "goals" : 
+                ["Inutile"]
+        },
+        {
+            "name": "signicodes",
+            "label": "Signifiance des codes",
+            "description" : "{ INSÉRER DESCRIPTION }",
+            "goals" : 
+                ["Inutile"]
+        },
+        {
+            "name": "comptabilite",
+            "label": "Compatibilité",
+            "description" : "{ INSÉRER DESCRIPTION }",
             "goals" : 
                 ["Inutile"]
         }
