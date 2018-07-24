@@ -95,6 +95,9 @@ $(function () {
 
     $('#my_results_btn').on("click", function(){
         show_block(blocks.my_results)
+        
+        show_block(blocks.result)
+        socket.emit('get_result', getCookie('user'), 'test_screen')
     })
 
     document.onkeypress=function(e){
@@ -209,18 +212,21 @@ $(function () {
                     backgroundColor: ['rgba(255, 99, 132, 0.2)'],
                     borderColor: ['rgba(255,99,132,1)'],
                     borderWidth: 3
+                },
+                {
+                    label: "",
+                    data: [100, 0]
                 }]
             },
             options: {
                 responsive: true,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            suggestedMin: 20,
-                            suggestedMax: 30
-                        }
-                    }]
-                } 
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    enabled: false
+                }
             }
         });
 
@@ -229,13 +235,6 @@ $(function () {
         $('.list_desc_item').remove();
 
         var list_desc = $('#list-description');
-        
-        list_desc.append("<li class='list_desc_item'>SCREEN_NAME = " + data.screen_name + "</li>");
-        list_desc.append("<li class='list_desc_item'>USER_NAME = " + data.user + "</li>");
-        list_desc.append("<li class='list_desc_item'>START_DATE = " + new Date(data.start_date) + "</li>");
-        list_desc.append("<li class='list_desc_item'>FINISH_DATE = " + new Date(data.finish_date) + "</li>");
-        list_desc.append("<li class='list_desc_item'>LANGUAGE = " + data.language + "</li>");
-        list_desc.append("<li class='list_desc_item'>======" + "</li>");
 
         var i = 0;
         data.topics.forEach(topic => {
