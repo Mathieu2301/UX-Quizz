@@ -10,8 +10,8 @@ $(function () {
         login: "#login_block",
         start_quizz: "#start_quizz",
         quizz_questions: "#quizz_questions",
-        result: "#result_block",
-        my_results: "#my_results_block"
+        result: ".results_blocks",
+        my_results: ".results_blocks"
     }
 
     var language = "en";
@@ -56,7 +56,7 @@ $(function () {
             $('#questions_validate_btn').text(json_lang.buttons.next);
             $('#questions_cancel_btn').text(json_lang.buttons.cancel);
 
-
+            $('#my_result_block_title').text(json_lang.labels.nav_results)
         })
     }
     
@@ -72,7 +72,7 @@ $(function () {
             opacity: '1',
             height: '50%',
             padding: "16px 32px"
-        }, 700);
+        }, 300);
         $(name).fadeIn();
     }
 
@@ -85,19 +85,25 @@ $(function () {
             opacity: '0',
             height: '0px',
             padding: '0px'
-        }, 700);
+        }, 300);
         $(name).fadeOut();
     }
 
     $('#ux_quizz_btn').on("click", function(){
-        hide_block(blocks.my_results, false)
+        hide_block(blocks.all, false)
+        
+        if (Object.keys(questions).length <= 1){
+            show_block(blocks.start_quizz);
+        }else{
+            show_block(blocks.quizz_questions);
+        }
     })
 
     $('#my_results_btn').on("click", function(){
+        hide_block(blocks.all, false)
+
         show_block(blocks.my_results)
-        
-        show_block(blocks.result)
-        socket.emit('get_result', getCookie('user'), 'test_screen')
+        socket.emit('get_results', getCookie('user'))
     })
 
     document.onkeypress=function(e){
@@ -200,15 +206,24 @@ $(function () {
     
     socket.on('show_result', function(data){
         
+        setRadar(data.topics, data.score, data.screen_name);
 
+        show_block(blocks.result)
+
+        hide_block(blocks.quizz_questions, false)
+        $('.question').remove();
+        questions = {};
+    })
+
+    function setRadar(radar_labels, radar_data, radar_title){
         var ctx = document.getElementById("result-chart").getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: data.topics,
+                labels: radar_labels,
                 datasets: [{
-                    label: data.screen_name,
-                    data: data.score,
+                    label: "",
+                    data: radar_data,
                     backgroundColor: ['rgba(255, 99, 132, 0.2)'],
                     borderColor: ['rgba(255,99,132,1)'],
                     borderWidth: 3
@@ -223,32 +238,40 @@ $(function () {
                 maintainAspectRatio: false,
                 legend: {
                     display: false
-                },
-                tooltips: {
-                    enabled: false
                 }
             }
         });
 
-        $('#result_block_title').text(data.screen_name)
+        $('#result_block_title').text(radar_title)
+    }
+    
+    socket.on('delete_results_of_table', function(){
+        $('.result_item').remove();
+    })
 
-        $('.list_desc_item').remove();
+    socket.on('add_result_to_table', function(data){
+        
+        var date = new Date(data.date)
 
-        var list_desc = $('#list-description');
+        let month = String(date.getMonth() + 1);
+        let day = String(date.getDate());
+          
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+          
+        var formatted_date = `${day}/${month}`;
 
-        var i = 0;
-        data.topics.forEach(topic => {
-            list_desc.append("<li class='list_desc_item'>" + topic + " = " + data.score[i] + "</li>");
-            ++i;
-        });
+        $('#list_results').append('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td>'+ data.score +'/100</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600">delete</i></button></td></tr>');
+        
+        $('#'+ data.date).on('click', function(){
+            $('.result_item').css('background-color', '')
+            socket.emit('get_result', getCookie('user'), data.date);
+            $('#'+ data.date).css('background-color', 'lightgrey')
+        })
 
-        show_block(blocks.result)
-
-        show_block(blocks.start_quizz);
-        hide_block(blocks.quizz_questions, false)
-        $('.question').remove();
-        questions = {};
-
+        $('#del_'+ data.date).on('click', function(){
+            $('#'+ data.date).remove();
+        })        
     })
 
     socket.on("disconnect", function(){
