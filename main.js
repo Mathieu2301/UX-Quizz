@@ -5,11 +5,15 @@ var port = process.env.PORT || 80;
 
 var path = require("path");
 var fs = require("fs");
+var connected_users = 0;
 
-app.use(require('express').static("./web"));
+app.use(require('express').static("web"));
 
 io.on('connection', function(client){
+    connected_users++
     console.log("Connect : " + client.id.substr(-4))
+    console.log("Connected : " + connected_users)
+    
     io.sockets.emit('notif', "User connected : " + client.id.substr(-4), "info");
   
     client.on('get_quizz', function(data){
@@ -87,18 +91,24 @@ io.on('connection', function(client){
                 });
         
                 quizz_score[step-1] = Math.round(score / moy_divis);
-                console.log(quizz_score);
 
-                console.log("step = " + step + " | len = " + Object.keys(topics_json).length);
                 if (step != Object.keys(topics_json).length){
                     getQuizzTopic(step);
                 }else{
-                    console.log(quizz_score)
+                    var moyenne = 0;
+                    var moy_divis_2 = 0;
+
+                    quizz_score.forEach(score => {
+                        moyenne += score;
+                        moy_divis_2++;
+                    })
+
                     var json_screen_results_file = {
                         user: user_name,
                         screen_name: screen_name,
                         topics: topics,
                         score: quizz_score,
+                        average: Math.round(moyenne / moy_divis_2),
                         start_date: start_date,
                         finish_date: Date.now(),
                         language: lang
@@ -121,7 +131,7 @@ io.on('connection', function(client){
             })
 
         }else{
-            client.emit('notif', "Wrong screen name", "warn");
+            client.emit('notif', "Wrong screen name", "error");
         }
     })
 
@@ -146,7 +156,10 @@ io.on('connection', function(client){
     })
 
     client.on('disconnect', function(){
+        connected_users--
         console.log("Disconn : " + client.id.substr(-4))
+        console.log("Connected : " + connected_users)
+        
         io.sockets.emit('notif', "User disconnected : " + client.id.substr(-4), "info");
     });
 });

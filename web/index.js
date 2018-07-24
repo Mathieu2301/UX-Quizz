@@ -219,7 +219,14 @@ $(function () {
                 }]
             },
             options: {
-
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    enabled: false
+                }
             }
         });
 
@@ -228,13 +235,6 @@ $(function () {
         $('.list_desc_item').remove();
 
         var list_desc = $('#list-description');
-        
-        list_desc.append("<li class='list_desc_item'>SCREEN_NAME = " + data.screen_name + "</li>");
-        list_desc.append("<li class='list_desc_item'>USER_NAME = " + data.user + "</li>");
-        list_desc.append("<li class='list_desc_item'>START_DATE = " + new Date(data.start_date) + "</li>");
-        list_desc.append("<li class='list_desc_item'>FINISH_DATE = " + new Date(data.finish_date) + "</li>");
-        list_desc.append("<li class='list_desc_item'>LANGUAGE = " + data.language + "</li>");
-        list_desc.append("<li class='list_desc_item'>======" + "</li>");
 
         var i = 0;
         data.topics.forEach(topic => {
