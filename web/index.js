@@ -10,7 +10,6 @@ $(function () {
         login: "#login_block",
         start_quizz: "#start_quizz",
         quizz_questions: "#quizz_questions",
-        result: ".results_blocks",
         my_results: ".results_blocks"
     }
 
@@ -43,20 +42,24 @@ $(function () {
             $('#my_results_label').text(json_lang.labels.nav_results);
     
             $('#login_block_title').text(json_lang.titles.login_block);
-            $('#username_txtbox_label').text(json_lang.txtboxs.login_placeholder)
-            $('#username_txtbox_btn').val(json_lang.buttons.next)
+            $('#username_txtbox_label').text(json_lang.txtboxs.login_placeholder);
+            $('#username_txtbox_btn').val(json_lang.buttons.next);
 
             $('#start_quizz_block_title').text(json_lang.titles.start_quizz_block);
             $('#screen_name_txtbox_label').text(json_lang.txtboxs.screenname_placeholder);
             $('#screen_name_txtbox_btn').val(json_lang.buttons.start);
     
             $('#description_block_title').text(json_lang.titles.description_block + " " + getCookie('user'));
-            $('#description').text(json_lang.other.description_block);
+            $('#description').html(json_lang.other.description_block);
         
             $('#questions_validate_btn').text(json_lang.buttons.next);
             $('#questions_cancel_btn').text(json_lang.buttons.cancel);
 
-            $('#my_result_block_title').text(json_lang.labels.nav_results)
+            $('#my_result_block_title').text(json_lang.labels.nav_results);
+            $('#my_result_block_error').text(json_lang.other.no_results_error);
+            $('#my_result_table_screen_name').text(json_lang.txtboxs.screenname_placeholder);
+            $('#my_result_table_score').text(json_lang.other.score);
+            $('#my_result_table_date').text(json_lang.other.date);
         })
     }
     
@@ -65,45 +68,67 @@ $(function () {
 
     socket.on('show_block', function(name){show_block(name);});
     function show_block(name){
-        if ($("#loading").is(":visible")){$('#loading').fadeOut(200);}
+        if ($(name).css('opacity') == 0){
+            if ($("#loading").is(":visible")){$('#loading').fadeOut(200);}
         
-        $(name).animate({
-            left: '0px',
-            opacity: '1',
-            height: '50%',
-            padding: "16px 32px"
-        }, 300);
-        $(name).fadeIn();
+            $(name).animate({
+                left: '0px',
+                opacity: '1',
+                height: '50%',
+                padding: "16px 32px"
+            }, 300);
+            $(name).fadeIn();
+        } 
     }
 
     socket.on('hide_block', function(name){hide_block(name);});
     function hide_block(name, load=true){
-        if ($("#loading").is(":hidden") && load){$('#loading').fadeIn(200);}
+        if ($(name).css('opacity') == 1){
+            if ($("#loading").is(":hidden") && load){$('#loading').fadeIn(200);}
 
-        $(name).animate({
-            left: '-100px',
-            opacity: '0',
-            height: '0px',
-            padding: '0px'
-        }, 300);
-        $(name).fadeOut();
+            $(name).animate({
+                left: '-100px',
+                opacity: '0',
+                height: '0px',
+                padding: '0px'
+            }, 300);
+            $(name).fadeOut();
+        }
     }
 
     $('#ux_quizz_btn').on("click", function(){
-        hide_block(blocks.all, false)
         
-        if (Object.keys(questions).length <= 1){
-            show_block(blocks.start_quizz);
+        hide_block(blocks.my_results, false)
+        
+        if (getCookie("user") != ""){
+            hide_block(blocks.description_block, false)
+            if (Object.keys(questions).length <= 1){
+                show_block(blocks.start_quizz);
+            }else{
+                show_block(blocks.quizz_questions);
+            }
         }else{
-            show_block(blocks.quizz_questions);
+            show_block(blocks.description_block);
+            show_block(blocks.login);
         }
     })
 
     $('#my_results_btn').on("click", function(){
-        hide_block(blocks.all, false)
 
+        hide_block(blocks.quizz_questions, false);
+        hide_block(blocks.start_quizz, false)
+        hide_block(blocks.description_block, false)
+
+        if (getCookie("user") == ""){
+            show_block(blocks.login);
+        }else{
+            hide_block(blocks.login, false);
+        }
         show_block(blocks.my_results)
+
+        setRadar(["Guidage","Charge de travail","Contrôle explicite","Adaptabilité","Gestion des erreurs","Homogénéité","Signifiance des codes","Compatibilité"], [], "Radar");
         socket.emit('get_results', getCookie('user'))
+        updateTableVisible()
     })
 
     document.onkeypress=function(e){
@@ -208,7 +233,7 @@ $(function () {
         
         setRadar(data.topics, data.score, data.screen_name);
 
-        show_block(blocks.result)
+        show_block(blocks.my_results)
 
         hide_block(blocks.quizz_questions, false)
         $('.question').remove();
@@ -247,10 +272,11 @@ $(function () {
     
     socket.on('delete_results_of_table', function(){
         $('.result_item').remove();
+        updateTableVisible()
     })
 
     socket.on('add_result_to_table', function(data){
-        
+
         var date = new Date(data.date)
 
         let month = String(date.getMonth() + 1);
@@ -261,7 +287,7 @@ $(function () {
           
         var formatted_date = `${day}/${month}`;
 
-        $('#list_results').append('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td>'+ data.score +'/100</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600">delete</i></button></td></tr>');
+        $('#list_results').append('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td class="mdl-data-table__cell--non-numeric">'+ data.score +'%</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600">delete</i></button></td></tr>');
         
         $('#'+ data.date).on('click', function(){
             $('.result_item').css('background-color', '')
@@ -270,9 +296,47 @@ $(function () {
         })
 
         $('#del_'+ data.date).on('click', function(){
-            $('#'+ data.date).remove();
-        })        
+            iziToast.question({
+                timeout: false,
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                closeOnEscape: true,
+                overlayClose: true,
+                maxWidth: 550,
+                id: 'question',
+                zindex: 999,
+                title: 'Hey',
+                message: 'Are you sure you want to delete the result ?',
+                position: 'center',
+                transitionOut: "fadeOutDown",
+                buttons: [
+                    ['<button><b>YES</b></button>', function (instance, toast) {
+             
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                        socket.emit('remove_result', getCookie('user'), data.date);
+                        socket.emit('get_results', getCookie('user'));
+                    }, true],
+                    ['<button>NO</button>', function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }],
+                ]
+            });
+        })
+        
+        updateTableVisible();
     })
+
+    function updateTableVisible(){
+
+        if($(".result_item").length == 0){
+            $('#results_table').hide();
+        }else{
+            $('#my_result_block_error').hide();
+            $('#results_table').show();
+        }
+    }
 
     socket.on("disconnect", function(){
         hide_block(blocks.all);
@@ -298,6 +362,10 @@ $(function () {
             docElm.webkitRequestFullScreen();
         }
     }
+
+    socket.on('users_online', function(nb){
+        $('#online_users_label').text('En ligne : ' + nb)
+    })
 
     socket.on('notif', function(text, type){ notif(text, type); })
 
@@ -329,23 +397,13 @@ $(function () {
 
         iziToast.show({
             id: null, 
-            class: '',
             title: toast_title,
-            titleColor: '',
-            titleSize: '',
-            titleLineHeight: '',
             message: toast_msg,
-            messageColor: '',
             messageSize: '',
             messageLineHeight: '',
-            backgroundColor: '',
             theme: 'light', // dark
             color: toast_color, // blue, red, green, yellow
             icon: toast_image,
-            iconText: '',
-            iconColor: '',
-            image: '',
-            imageWidth: 50,
             maxWidth: null,
             zindex: null,
             layout: 2,
@@ -368,7 +426,7 @@ $(function () {
             overlayClose: false,
             overlayColor: 'rgba(0, 0, 0, 0.6)',
             transitionIn: 'fadeInUp',
-            transitionOut: 'fadeOut',
+            transitionOut: 'fadeOutDown',
             transitionInMobile: 'fadeInUp',
             transitionOutMobile: 'fadeOutDown'
         });
