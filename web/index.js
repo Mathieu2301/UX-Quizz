@@ -131,6 +131,9 @@ $(function () {
         show_block(blocks.my_results)
 
         socket.emit('get_results', getCookie('user'))
+        socket.emit('get_topic_labels', getCookie('lang'), function(topics){
+            setRadar(topics, [], "Radar");
+        })
         
         updateTableVisible()
     })
@@ -143,9 +146,6 @@ $(function () {
         hide_block(blocks.start_quizz, false);
 
         socket.emit('get_topics', getCookie('lang'))
-        socket.emit('get_topic_labels', getCookie('lang'), function(topics){
-            setRadar(topics, [], "Radar");
-        })
 
         show_block(blocks.crit_ergo_block);
     })
