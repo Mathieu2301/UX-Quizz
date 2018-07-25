@@ -107,10 +107,10 @@ h5 {
   background-color: #00BCD4;
   color: #37474F;
   -webkit-transition-property: background-color;
-  -webkit-transition-duration: 0.2s;
+  -webkit-transition-duration: 0.1s;
   -webkit-transition-timing-function: ease;
   transition-property: background-color;
-  transition-duration: 0.2s;
+  transition-duration: 0.1s;
   transition-timing-function: ease;
 }
 .demo-navigation .mdl-navigation__link .material-icons {
@@ -121,6 +121,22 @@ h5 {
 
 .demo-content {
   max-width: 1080px;
+}
+
+.mdl-data-table tbody tr:hover{
+  background-color: rgb(161, 213, 255) !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.mdl-chip:active{
+  background-color: rgb(73, 173, 255) !important;
+}
+
+.mdl-chip {
+  margin-top: 5px;
+  margin-right: 5px;
+  background-color: rgb(33,150,243);
+  color: rgb(255,255,255);
 }
 
 .demo-charts {
@@ -140,6 +156,7 @@ h5 {
 .demo-chart:nth-child(4) {
   color: #EF3C79;
 }
+
 .demo-graphs {
   position: relative;
   width: 100%;

@@ -1,0 +1,184 @@
+{
+    "questions": [
+        {
+            "txt" : "J’ai Indiqué à l’utilisateur les éléments cliquables",
+            "topic" : 0
+        },
+        {
+            "txt" : "Le titre de la page est clair et en adéquation avec le contenu",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai ajouté des aides de saisie par exemple: pour une date (jj.mm.aaaa), pour une devise (EUR)",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai affiché les unités de mesure des données à saisir",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai fourni des indices sur la longueur autorisée des entrées dans un champ",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai intégré des éléments dynamiques pour capter le regard",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai distingué les différentes zones de l’écran d’une manière logique",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai affiché des astérisques correspondant aux entrées qui doivent être effectuées par les utilisateurs.",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai indiqué aux utilisateurs que les traitements sont en cours, dans les cas où les traitements sont longs.",
+            "topic" : 0
+        },
+        {
+            "txt" : "La hiérarchisation du contenu est disponible (titres, sous titres).",
+            "topic" : 0
+        },
+        {
+            "txt" : "Le contraste entre la couleur d’arrière plan et la police est assez fort.",
+            "topic" : 0
+        },
+        {
+            "txt" : "J’ai ajouté des espaces vides afin d’aérer la mise en page (interligne, espaces entre les caractères…) et utilisé les styles graphiques de façon pertinente (gras, italique, soulignement…)",
+            "topic" : 0
+        },
+        {
+            "txt" : "Pour les données numériques, la saisie des zéros précédant les nombres n’est pas nécessaire.",
+            "topic" : 1
+        },
+        {
+            "txt" : "J’ai permis aux utilisateurs des entrées de données courtes.",
+            "topic" : 1
+        },
+        {
+            "txt" : "Les libellés sont clairs et concis dans les formulaires.",
+            "topic" : 1
+        },
+        {
+            "txt" : "J’ai minimisé le nombre d’étapes dans la sélection de menus.",
+            "topic" : 1
+        },
+        {
+            "txt" : "Pour la saisie de données, j’ai affiché dans les champs appropriés, les valeurs par défaut.",
+            "topic" : 1
+        },
+        {
+            "txt" : "J’ai intégré uniquement les informations essentielles pour ne pas noyer l’information principale",
+            "topic" : 1
+        },
+        {
+            "txt" : "J’ai évité à l’utilisateur d’avoir à se rappeler des données d’une page écran à une autre.",
+            "topic" : 1
+        },
+        {
+            "txt" : "L’information ne nécessite pas de traductions d’unités.",
+            "topic" : 1
+        },
+        {
+            "txt" : "Les données qui peuvent être calculées à partir de celles saisies par l’utilisateur sont automatiquement affichées.",
+            "topic" : 1
+        },
+        {
+            "txt" : "Le système exige une action explicite de validation par l’utilisateur (Entrée, Validation, OK) suite à une entrée de données.",
+            "topic" : 2
+        },
+        {
+            "txt" : "On ne passe pas d’une page écran à une autre sans le contrôle de l’utilisateur.",
+            "topic" : 2
+        },
+        {
+            "txt" : "L’utilisateur est autorisé à interrompre à tout moment une action ou un traitement en cours (ex.: annuler).",
+            "topic" : 2
+        },
+        {
+            "txt" : "La possibilité de retour arrière est fournie, conduisant à l’annulation des modifications en cours et au retour à la version immédiatement précédente.",
+            "topic" : 2
+        },
+        {
+            "txt" : "Quand certains affichages sont inutiles, les utilisateurs peuvent les désactiver temporairement.",
+            "topic" : 3
+        },
+        {
+            "txt" : "Quand les exigences utilisateurs sont imprécises, les utilisateurs peuvent avoir une certaine latitude dans les possibilités de contrôle des affichages",
+            "topic" : 3
+        },
+        {
+            "txt" : "Toutes les actions possibles sont envisagées et plus particulièrement les appuis accidentels des touches du clavier afin que les entrées non attendues soient détectées.",
+            "topic" : 4
+        },
+        {
+            "txt" : "L’aide à la saisie est directement affichée en indiquant le format de saisie souhaité.",
+            "topic" : 4
+        },
+        {
+            "txt" : "Les labels de champs sont protégés.",
+            "topic" : 4
+        },
+        {
+            "txt" : "J’ai affiché les messages d’erreur les plus concis possibles (simples et compréhensibles).",
+            "topic" : 4
+        },
+        {
+            "txt" : "J’ai indiqué la cause ou les causes de l’erreur.",
+            "topic" : 4
+        },
+        {
+            "txt" : "J’ai intégré les solutions possibles avec des exemples.",
+            "topic" : 4
+        },
+        {
+            "txt" : "J’ai adopté un vocabulaire neutre, non personnalisé, non réprobateur dans les messages d’erreur.",
+            "topic" : 4
+        },
+        {
+            "txt" : "Suite à une erreur de saisie d’une commande ou de données, les utilisateurs ont la possibilité de corriger seulement la portion de données ou de commande qui est erronée.",
+            "topic" : 4
+        },
+        {
+            "txt" : "Si les utilisateurs se rendent compte qu’ils ont commis une erreur d’entrée de données, ils ont la possibilité d’effectuer, au moment de leur détection d’erreur, les corrections souhaitées.",
+            "topic" : 4
+        },
+        {
+            "txt" : "La charte graphique est homogène dans toute l'application.",
+            "topic" : 5
+        },
+        {
+            "txt" : "Les systèmes de navigation sont identiques sur chaque page.",
+            "topic" : 5
+        },
+        {
+            "txt" : "Les boutons d’actions aux fonctions similaires sont harmonisés graphiquement.",
+            "topic" : 5
+        },
+        {
+            "txt" : "Les règles d’abréviation sont explicites.",
+            "topic" : 6
+        },
+        {
+            "txt" : "Les codes et dénominations sont significatifs et familiers plutôt que des codes et dénominations arbitraires.",
+            "topic" : 6
+        },
+        {
+            "txt" : "Les icônes sont compréhensibles.",
+            "topic" : 6
+        },
+        {
+            "txt" : "Les termes employés sont familiers aux utilisateurs, et relatifs à la tâche à réaliser.",
+            "topic" : 7
+        },
+        {
+            "txt" : "Les unités de mesure sont celles qui sont normalement utilisées.",
+            "topic" : 7
+        },
+        {
+            "txt" : "Les procédures de dialogue sont compatibles avec l’ordre tel que se l’imagine l’utilisateur ou celui dont il a l’habitude.",
+            "topic" : 7
+        }
+    ]
+}

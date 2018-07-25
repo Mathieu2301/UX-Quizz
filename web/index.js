@@ -5,7 +5,7 @@ $(function () {
     var socket = io();
 
     var blocks = {
-        all: ".demo-graphs",
+        all: ".mdl-grid",
         description_block: "#description_block",
         login: "#login_block",
         start_quizz: "#start_quizz",
@@ -15,6 +15,7 @@ $(function () {
     }
 
     var language = "en";
+
     if (getCookie('lang') != "fr" && getCookie('lang') != "en"){
         setCookie('lang', 'en');
     }
@@ -35,7 +36,7 @@ $(function () {
             $('#setFR_btn').fadeOut();
         }
 
-        socket.emit('get_texts', language, function(json_lang){
+        socket.emit('get_texts', getCookie('lang'), function(json_lang){
             $(document).attr("title", json_lang.main.NAME);
             $('.mdl-layout-title').text(json_lang.main.NAME);
     
@@ -62,6 +63,8 @@ $(function () {
             $('#my_result_table_screen_name').text(json_lang.txtboxs.screenname_placeholder);
             $('#my_result_table_score').text(json_lang.other.score);
             $('#my_result_table_date').text(json_lang.other.date);
+
+            $('#topics_1_block_title').text(json_lang.other.criteres)
         })
     }
     
@@ -79,7 +82,7 @@ $(function () {
                 margin: "8px"
             }, 300);
 
-            if ($("#loading").is(":visible")){$('#loading').fadeOut(200);}
+            if ($("#loading").is(":visible") && $(blocks.all).is(":visible")){$('#loading').fadeOut(200);}
         } 
     }
 
@@ -114,6 +117,8 @@ $(function () {
             show_block(blocks.description_block);
             show_block(blocks.login);
         }
+
+        $('.mdl-layout-title').text($('#ux_quizz_label').text());
     })
 
     $('#my_results_btn').on("click", function(){
@@ -128,17 +133,18 @@ $(function () {
             hide_block(blocks.login, false);
         }
         show_block(blocks.my_results)
-        socket.emit('get_results', getCookie('user'))
+      
+        socket.emit('get_results')
         socket.emit('get_topic_labels', getCookie('lang'), function(topics){
             setRadar(topics, [], "Radar");
         })
         
         updateTableVisible()
+        $('.mdl-layout-title').text($('#my_results_label').text());
     })
 
     $('#crit_ergo_btn').on('click', function(){
         hide_block(blocks.description_block);
-        hide_block(blocks.login, false);
         hide_block(blocks.my_results, false);
         hide_block(blocks.quizz_questions, false);
         hide_block(blocks.start_quizz, false);
@@ -146,18 +152,13 @@ $(function () {
         socket.emit('get_topics', getCookie('lang'))
 
         show_block(blocks.crit_ergo_block);
+        $('.mdl-layout-title').text($('#crit_ergo_label').text());
     })
 
-    document.onkeypress=function(e){
-        e=e||window.event;
-        var key=e.which?e.which:event.keyCode;
-        console.log("Key = " + key);
-    }
-
     $("#start_quizz").submit(function(event) {
-        var scr_name = $('#screen_name_txtbox').val();
+        var screen_name = $('#screen_name_txtbox').val();
 
-        socket.emit('get_quizz', {user_name: getCookie('user'), screen_name: scr_name, language: language})
+        socket.emit('get_quizz', screen_name)
         event.preventDefault();
     });
     
@@ -175,15 +176,15 @@ $(function () {
         event.preventDefault();
     });
 
+    var first_connect = true;
+
     socket.on('connect', function () {
-
-        setTimeout(function(){
-
+        if (first_connect){
             if (getCookie("user").includes('@')){
                 notif('Please do not enter the "@murex.com"', "warn");
                 setCookie('user', "");
             }
-
+    
             if (getCookie("user") != ""){
                 show_block(blocks.description_block);
                 show_block(blocks.start_quizz);
@@ -191,9 +192,15 @@ $(function () {
                 show_block(blocks.description_block);
                 show_block(blocks.login);
             }
-        }, 200)
-        
-
+            first_connect = false;
+        }else{
+            notif('Connected', 'success')
+        }
+        if (getCookie("user") != ""){
+            socket.emit('login', getCookie('user'), getCookie('lang'))
+        }
+        $(blocks.all).fadeIn();
+        $('#loading').fadeOut(200);
     });
 
     socket.on('del_questions', function(){
@@ -210,7 +217,7 @@ $(function () {
         $('#quizz_block_title').text(title);
         $('#quizz_block_description').text(tag_description);
 
-        var template = '<li class="mdl-list__item question"><span class="mdl-list__item-primary-content" style="width: 50%;"><i class="material-icons" style="padding-right: 15px;bottom: 1px;position: relative;">add_circle</i><div id="question_text" style="width: 70%;">{text}​</div></span><span class="mdl-list__item-secondary-action"><label class="radio-container" for="{id}o1">Non<input type="radio" id="{id}o1" name="{id}" value="1" checked><span class="checkmark"></span></label><label class="radio-container" for="{id}o2">Partiellement<input type="radio" id="{id}o2" name="{id}" value="2"><span class="checkmark"></span></label><label class="radio-container" for="{id}o3">Oui<input type="radio" id="{id}o3" name="{id}" value="3"><span class="checkmark"></span></label><label class="radio-container" for="{id}o4">Non applicable<input type="radio" id="{id}o4" name="{id}" value="0"><span class="checkmark"></span></label></span></li>';
+        var template = '<li class="mdl-list__item question"><span class="mdl-list__item-primary-content" style="width: 50%;"><i class="material-icons" style="padding-right: 15px;bottom: 1px;position: relative;color: rgba(0, 0, 0, 0.55);font-size: 21px;">fiber_manual_record</i><div id="question_text" style="width: 70%;">{text}​</div></span><span class="mdl-list__item-secondary-action"><label class="radio-container" for="{id}o1">Non<input type="radio" id="{id}o1" name="{id}" value="1" checked><span class="checkmark"></span></label><label class="radio-container" for="{id}o2">Partiellement<input type="radio" id="{id}o2" name="{id}" value="2"><span class="checkmark"></span></label><label class="radio-container" for="{id}o3">Oui<input type="radio" id="{id}o3" name="{id}" value="3"><span class="checkmark"></span></label><label class="radio-container" for="{id}o4">Non applicable<input type="radio" id="{id}o4" name="{id}" value="0"><span class="checkmark"></span></label></span></li>';
         
         var html = template.replace(/{id}/g, id).replace(/{text}/g, tag_text);
         $("#list-questions").append(html);
@@ -243,19 +250,29 @@ $(function () {
 
         if (!return_){
             socket.emit('save_quizz', questions);
-            
-            $('.question').remove();
-            questions = {};
-            hide_block(blocks.quizz_questions, false)
         }
     })
-    
+
+    socket.on('close_quizz', function(data){
+        $('.question').remove();
+        questions = {};
+        hide_block(blocks.quizz_questions, false)
+
+        show_block(blocks.my_results)
+
+        socket.emit('get_results')
+        
+        updateTableVisible()
+        $('.mdl-layout-title').text($('#my_results_label').text());
+    })
+
     socket.on('show_result', function(data){
         show_block(blocks.my_results)
         setRadar(data.topics, data.score, data.screen_name);
     })
 
     function setRadar(radar_labels, radar_data, radar_title){
+
         var ctx = document.getElementById("result-chart").getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'radar',
@@ -302,7 +319,7 @@ $(function () {
           
         var formatted_date = `${day}/${month}`;
 
-        $('#list_results').prepend('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td class="mdl-data-table__cell--non-numeric">'+ data.score +'%</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600">delete</i></button></td></tr>');
+        $('#list_results').prepend('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td class="mdl-data-table__cell--non-numeric">'+ data.score +'%</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600 del_icon" id="delicon_'+ data.date +'">delete</i></button></td></tr>');
         
         $('#'+ data.date).on('click', function(){
             select();
@@ -328,8 +345,8 @@ $(function () {
              
                         instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
 
-                        socket.emit('remove_result', getCookie('user'), data.date);
-                        socket.emit('get_results', getCookie('user'));
+                        socket.emit('remove_result', data.date);
+                        socket.emit('get_results');
                     }, true],
                     ['<button>NO</button>', function (instance, toast) {
                         instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
@@ -340,8 +357,19 @@ $(function () {
 
         function select(){
             $('.result_item').css('background-color', '')
-            socket.emit('get_result', getCookie('user'), data.date);
-            $('#'+ data.date).css('background-color', 'lightgrey')
+            $('.del_icon').css('cssText', 'color: ;')
+
+            $('.result_item').css('color', 'rgb(0,0,0,.87)')
+            $('#delicon_'+data.date).css('cssText', 'color: white !important;')
+
+            
+            
+            socket.emit('get_result', data.date);
+            
+            //$('#'+ data.date).css('background-color', 'lightgrey')
+
+            $('#'+ data.date).css('background-color', 'rgb(33,150,243)')
+            $('#'+ data.date).css('color', 'rgb(255,255,255)')
         }
 
         select();
@@ -361,7 +389,7 @@ $(function () {
         // topic.description
         // topic.goals[]
 
-        $('#list_topics').prepend('<tr class="topic_item" id="'+ topic.name +'"><td class="mdl-data-table__cell--non-numeric">'+ topic.label +'</td></tr>');
+        $('#list_topics').append('<tr class="topic_item" id="'+ topic.name +'"><td class="mdl-data-table__cell--non-numeric" style="text-align: center;">'+ topic.label +'</td></tr>');
         topics.push(topic.label)
 
         $('#'+ topic.name).on('click', function(){
@@ -370,6 +398,7 @@ $(function () {
 
         function select(){
             $('.topic_item').css('background-color', '')
+            $('.topic_item').css('color', 'rgb(0,0,0,.87)')
             
             $('#topics_2_block_title').text(topic.label)
             $('#topics_2_block_description').text(topic.description)
@@ -378,7 +407,8 @@ $(function () {
                 $('#topics_2_block_goal_list').prepend('<span class="mdl-chip topic_goal"><span class="mdl-chip__text">' + goal +'</span></span>')
             });
 
-            $('#'+ topic.name).css('background-color', 'lightgrey')
+            $('#'+ topic.name).css('background-color', 'rgb(33,150,243)')
+            $('#'+ topic.name).css('color', 'rgb(255,255,255)')
         }
 
         select();
@@ -395,15 +425,9 @@ $(function () {
     }
 
     socket.on("disconnect", function(){
-        hide_block(blocks.all);
-    });
-
-    socket.on('user-connected', function(){
-        notif("Un utilisateur s'est connecté", "info");
-    });
-
-    socket.on('user-disconnected', function(){
-        notif("Un utilisateur s'est déconnecté", "info");
+        $(blocks.all).fadeOut(200);
+        $('#loading').fadeIn(200);
+        notif('Connection lost... Please wait...', 'warn')
     });
 
     function fullscreen(){
@@ -419,8 +443,52 @@ $(function () {
         }
     }
 
-    socket.on('users_online', function(nb){
-        $('#online_users_label').text('En ligne : ' + nb)
+    var logs = false;
+
+    document.onkeypress=function(e){
+        e=e||window.event;
+        var key=e.which?e.which:event.keyCode;
+        
+        if (key == 2){
+            if (!logs){
+                logs = true;
+                show_log("Logs enabled")
+            }else{
+                logs = false;
+                show_log("Logs disabled")
+            }
+        }else{
+            if (logs) console.log("Key = " + key);
+        }
+    }
+
+    socket.on('log', function(log_msg){
+        if (logs) show_log(log_msg);
+    })
+    
+    function show_log(log_msg){
+        iziToast.show({
+            id: null,
+            timeout: 10000,
+            title: "Log",
+            message: log_msg,
+            theme: 'dark',
+            close: true,
+            closeOnEscape: true,
+            closeOnClick: true,
+            position: 'bottomRight',
+            drag: true,
+            pauseOnHover: true,
+            progressBar: true,
+            transitionIn: 'fadeInUp',
+            transitionOut: 'fadeOutDown',
+            transitionInMobile: 'fadeInUp',
+            transitionOutMobile: 'fadeOutDown'
+        });
+    }
+
+    socket.on('users', function(online){
+        $('#online_users_label').text('En ligne : ' + online)
     })
 
     socket.on('notif', function(text, type){ notif(text, type); })
@@ -457,8 +525,8 @@ $(function () {
             message: toast_msg,
             messageSize: '',
             messageLineHeight: '',
-            theme: 'light', // dark
-            color: toast_color, // blue, red, green, yellow
+            theme: 'light',
+            color: toast_color,
             icon: toast_image,
             maxWidth: null,
             zindex: null,
