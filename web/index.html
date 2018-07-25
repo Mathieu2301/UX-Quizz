@@ -156,6 +156,36 @@
               <div id="topics_2_block_goal_list" style="margin-bottom: 1em;"></div>
             </div>
 
+
+            <!-- Ligne qui contient 2 blocks -->
+          <div style="display:inline-flex;width: 100%;display: inline-flex;height: 50%;left: 0px;">
+
+              <!-- Block qui contient la listes des résultats -->
+            <div id="results_1" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 45%;">
+                <h3 id="my_result_block_title"></h3>
+                <h5 id="my_result_block_error" style="font-size: 15px;"></h5>
+                <table class="mdl-data-table mdl-js-data-table" id="results_table" style="margin-bottom: 1em;">
+                    <thead>
+                      <tr>
+                        <th class="mdl-data-table__cell--non-numeric" id="my_result_table_screen_name">Nom de l'écran</th>
+                        <th class="mdl-data-table__cell--non-numeric" id="my_result_table_score">Score</th>
+                        <th class="mdl-data-table__cell--non-numeric" id="my_result_table_date">Date</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="list_results">
+                    </tbody>
+                </table>
+            </div>
+
+              <!-- Block qui contient UN SEUL graphique de stats -->
+            <div id="results_2" class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col results_blocks" style="width: 65%;">
+                <h3 id="result_block_title"></h3>
+                <div style="top: -1em; position: relative; width: 100%; height: 25em;">
+                  <canvas id="result-chart"></canvas>
+                </div>
+            </div>
+
           </div>
         </div>
       </main>

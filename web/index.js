@@ -122,7 +122,6 @@ $(function () {
     })
 
     $('#my_results_btn').on("click", function(){
-
         hide_block(blocks.quizz_questions);
         hide_block(blocks.start_quizz, false)
         hide_block(blocks.description_block, false)
@@ -134,7 +133,7 @@ $(function () {
             hide_block(blocks.login, false);
         }
         show_block(blocks.my_results)
-
+      
         socket.emit('get_results')
         socket.emit('get_topic_labels', getCookie('lang'), function(topics){
             setRadar(topics, [], "Radar");
@@ -414,9 +413,7 @@ $(function () {
 
         select();
     })
-
-    
-
+  
     function updateTableVisible(){
 
         if($(".result_item").length == 0){
