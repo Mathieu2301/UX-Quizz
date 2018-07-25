@@ -10,7 +10,8 @@ $(function () {
         login: "#login_block",
         start_quizz: "#start_quizz",
         quizz_questions: "#quizz_questions",
-        my_results: ".results_blocks"
+        my_results: ".results_blocks",
+        crit_ergo_block: ".crit_ergo_blocks"
     }
 
     var language = "en";
@@ -40,6 +41,7 @@ $(function () {
     
             $('#ux_quizz_label').text(json_lang.labels.nav_home);
             $('#my_results_label').text(json_lang.labels.nav_results);
+            $('#crit_ergo_label').text(json_lang.labels.nav_crit_ergo);
     
             $('#login_block_title').text(json_lang.titles.login_block);
             $('#username_txtbox_label').text(json_lang.txtboxs.login_placeholder);
@@ -68,37 +70,38 @@ $(function () {
 
     socket.on('show_block', function(name){show_block(name);});
     function show_block(name){
-        if ($(name).css('opacity') == 0){
-            if ($("#loading").is(":visible")){$('#loading').fadeOut(200);}
-        
+        if ($(name).css('opacity') == 0){        
             $(name).animate({
                 left: '0px',
                 opacity: '1',
                 height: '50%',
-                padding: "16px 32px"
+                padding: "16px 32px",
+                margin: "8px"
             }, 300);
-            $(name).fadeIn();
+
+            if ($("#loading").is(":visible")){$('#loading').fadeOut(200);}
         } 
     }
 
     socket.on('hide_block', function(name){hide_block(name);});
-    function hide_block(name, load=true){
+    function hide_block(name, loader=true){
         if ($(name).css('opacity') == 1){
-            if ($("#loading").is(":hidden") && load){$('#loading').fadeIn(200);}
-
             $(name).animate({
-                left: '-100px',
+                left: '-1000px',
                 opacity: '0',
                 height: '0px',
-                padding: '0px'
+                padding: '0px',
+                margin: '0px'
             }, 300);
-            $(name).fadeOut();
+
+            if ($("#loading").is(":hidden") && loader){$('#loading').fadeIn(200);}
         }
     }
 
     $('#ux_quizz_btn').on("click", function(){
         
-        hide_block(blocks.my_results, false)
+        hide_block(blocks.my_results)
+        hide_block(blocks.crit_ergo_block, false);
         
         if (getCookie("user") != ""){
             hide_block(blocks.description_block, false)
@@ -115,9 +118,10 @@ $(function () {
 
     $('#my_results_btn').on("click", function(){
 
-        hide_block(blocks.quizz_questions, false);
+        hide_block(blocks.quizz_questions);
         hide_block(blocks.start_quizz, false)
         hide_block(blocks.description_block, false)
+        hide_block(blocks.crit_ergo_block, false);
 
         if (getCookie("user") == ""){
             show_block(blocks.login);
@@ -126,9 +130,24 @@ $(function () {
         }
         show_block(blocks.my_results)
 
-        setRadar(["Guidage","Charge de travail","Contrôle explicite","Adaptabilité","Gestion des erreurs","Homogénéité","Signifiance des codes","Compatibilité"], [], "Radar");
         socket.emit('get_results', getCookie('user'))
+        
         updateTableVisible()
+    })
+
+    $('#crit_ergo_btn').on('click', function(){
+        hide_block(blocks.description_block);
+        hide_block(blocks.login, false);
+        hide_block(blocks.my_results, false);
+        hide_block(blocks.quizz_questions, false);
+        hide_block(blocks.start_quizz, false);
+
+        socket.emit('get_topics', getCookie('lang'))
+        socket.emit('get_topic_labels', getCookie('lang'), function(topics){
+            setRadar(topics, [], "Radar");
+        })
+
+        show_block(blocks.crit_ergo_block);
     })
 
     document.onkeypress=function(e){
@@ -226,18 +245,16 @@ $(function () {
 
         if (!return_){
             socket.emit('save_quizz', questions);
+            
+            $('.question').remove();
+            questions = {};
+            hide_block(blocks.quizz_questions, false)
         }
     })
     
     socket.on('show_result', function(data){
-        
-        setRadar(data.topics, data.score, data.screen_name);
-
         show_block(blocks.my_results)
-
-        hide_block(blocks.quizz_questions, false)
-        $('.question').remove();
-        questions = {};
+        setRadar(data.topics, data.score, data.screen_name);
     })
 
     function setRadar(radar_labels, radar_data, radar_title){
@@ -287,12 +304,10 @@ $(function () {
           
         var formatted_date = `${day}/${month}`;
 
-        $('#list_results').append('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td class="mdl-data-table__cell--non-numeric">'+ data.score +'%</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600">delete</i></button></td></tr>');
+        $('#list_results').prepend('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td class="mdl-data-table__cell--non-numeric">'+ data.score +'%</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600">delete</i></button></td></tr>');
         
         $('#'+ data.date).on('click', function(){
-            $('.result_item').css('background-color', '')
-            socket.emit('get_result', getCookie('user'), data.date);
-            $('#'+ data.date).css('background-color', 'lightgrey')
+            select();
         })
 
         $('#del_'+ data.date).on('click', function(){
@@ -324,9 +339,54 @@ $(function () {
                 ]
             });
         })
-        
+
+        function select(){
+            $('.result_item').css('background-color', '')
+            socket.emit('get_result', getCookie('user'), data.date);
+            $('#'+ data.date).css('background-color', 'lightgrey')
+        }
+
+        select();
         updateTableVisible();
     })
+
+    var topics = [];
+    socket.on('delete_topics_of_table', function(){
+        $('.topic_item').remove();
+        $('.topic_goal').remove();
+        topics = [];
+    })
+    
+    socket.on('add_topic_to_table', function(topic){
+        // topic.name
+        // topic.label
+        // topic.description
+        // topic.goals[]
+
+        $('#list_topics').prepend('<tr class="topic_item" id="'+ topic.name +'"><td class="mdl-data-table__cell--non-numeric">'+ topic.label +'</td></tr>');
+        topics.push(topic.label)
+
+        $('#'+ topic.name).on('click', function(){
+            select();
+        })
+
+        function select(){
+            $('.topic_item').css('background-color', '')
+            
+            $('#topics_2_block_title').text(topic.label)
+            $('#topics_2_block_description').text(topic.description)
+            $('.topic_goal').remove();
+            topic.goals.forEach(goal => {
+                $('#topics_2_block_goal_list').prepend('<span class="mdl-chip topic_goal"><span class="mdl-chip__text">' + goal +'</span></span>')
+            });
+
+            $('#'+ topic.name).css('background-color', 'lightgrey')
+        }
+
+        select();
+    })
+
+    
 
     function updateTableVisible(){
 

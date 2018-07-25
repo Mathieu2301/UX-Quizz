@@ -10,7 +10,8 @@
         },
         "labels":{
             "nav_home":"UX Quizz",
-            "nav_results":"My results"
+            "nav_results":"My results",
+            "nav_crit_ergo":"Ergonomic criteria"
         },
         "buttons":{
             "next":"Next",

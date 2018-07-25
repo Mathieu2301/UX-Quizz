@@ -171,6 +171,32 @@ io.on('connection', function(client){
         })
     })
 
+    client.on('get_topics', function(lang){
+        if (lang == "en" || lang == "fr"){
+            var topics_json = require("./data/"+lang+"/topics.json").heuristiques;
+
+            client.emit('delete_topics_of_table');
+    
+            topics_json.forEach(topic => {
+                client.emit('add_topic_to_table', topic);
+            })
+        }
+    })
+
+    client.on('get_topic_labels', function(lang, callback){
+        if (lang == "en" || lang == "fr"){
+            
+            var topics_json = require("./data/"+lang+"/topics.json").heuristiques;
+            var topics_labels = [];
+
+            topics_json.forEach(topic => {
+                topics_labels.push(topic.label)
+            })
+
+            callback(topics_labels);
+        }
+    })
+
     client.on('remove_result', function(user, date){
         var dir = './data/results/'+user+'/'+date+'.json';
         var a = false;

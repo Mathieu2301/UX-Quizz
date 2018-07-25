@@ -250,6 +250,10 @@ _:-ms-input-placeholder, :root .demo-graph {
   background: white;
 }
 
+td {
+  cursor: pointer;
+}
+
 .demo-cards .demo-separator {
   height: 32px;
 }
