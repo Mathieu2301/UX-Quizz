@@ -26,7 +26,8 @@
             "description_block":"Envie d'améliorer l'expérience utilisateur de votre application ?</br>Vous avez maquetté des écrans et vous souhaitez les évaluer avant de les développer ?</br></br>Sur la base des critères ergonomiques de Bastien et Scapin (critères mondialement reconnus et utilisés), nous vous proposons de réaliser vous-mêmes un petit audit ergonomique de vos écrans.</br> Critère par critère, vous allez évaluer vos écrans et ainsi découvrir leurs points forts et les axes d'amélioration. Nous vous donnons aussi accès à de la documentation pour mieux comprendre ces critères.</br></br> Merci de fournir votre adresse email Murex, cela nous permettra de sauvegarder les tests et vous pourrez ensuite retrouvez les audits de vos écrans.</br></br>Pour toute question, n'hésitez pas à contacter ux-consulting@murex.com",
             "no_results_error": "You have no saved results",
             "score": "Score",
-            "date": "Date"
+            "date": "Date",
+            "criteres": "Criteria"
         }
     }
 }
