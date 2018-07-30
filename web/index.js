@@ -333,10 +333,15 @@ $(function () {
           
         var formatted_date = `${day}/${month}`;
 
-        $('#list_results').prepend('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td class="mdl-data-table__cell--non-numeric">'+ data.score +'%</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600 del_icon" id="delicon_'+ data.date +'">delete</i></button></td></tr>');
+        $('#list_results').prepend('<tr class="result_item" id="'+ data.date +'"><td class="mdl-data-table__cell--non-numeric">'+ data.screen_name +'</td><td class="mdl-data-table__cell--non-numeric">'+ data.score +'%</td><td class="mdl-data-table__cell--non-numeric">'+ formatted_date +'</td><td><button href="javascript:void(0)" id="del_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600 del_icon" id="delicon_'+ data.date +'">delete</i></button><button href="javascript:void(0)" id="share_'+ data.date +'" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"><i class="material-icons mdl-color-text--grey-600 del_icon" id="shareicon_'+ data.date +'">share</i></button></td></tr>');
         
         $('#'+ data.date).on('click', function(){
             select();
+        })
+
+        $('#share_'+ data.date).on('click', function(){
+            notif(document.location.origin + "/?result_user=" + getCookie('user') + "&result_id=" + data.date)
+            copyToClipboard(document.location.origin + "/?result_user=" + getCookie('user') + "&result_id=" + data.date)
         })
 
         $('#del_'+ data.date).on('click', function(){
@@ -372,9 +377,11 @@ $(function () {
         function select(){
             $('.result_item').css('background-color', '')
             $('.del_icon').css('cssText', 'color: ;')
+            $('.share_icon').css('cssText', 'color: ;')
 
             $('.result_item').css('color', 'rgb(0,0,0,.87)')
             $('#delicon_'+data.date).css('cssText', 'color: white !important;')
+            $('#shareicon_'+data.date).css('cssText', 'color: white !important;')
             
             socket.emit('get_result', data.date);
             
@@ -595,6 +602,16 @@ $(function () {
     function GET_(param){
         var url = new URL(document.location);
         return url.searchParams.get(param);
+    }
+
+    function copyToClipboard(text) {
+        $('#clipboard').text(text)
+
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($('#clipboard').text()).select();
+        document.execCommand("copy");
+        $temp.remove();
     }
 
 });
