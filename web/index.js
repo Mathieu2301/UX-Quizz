@@ -258,8 +258,10 @@ $(function () {
         $('#loading').fadeOut(200);
 
         if (GET_('result_user') != undefined && GET_('result_id') != undefined){
-            socket.emit('get_results');
-            socket.emit('get_result', GET_('result_id'), GET_('result_user'));
+            console.log("aa " + GET_('result_id'))
+
+            socket.emit('get_results');     // INVERSER
+            socket.emit('get_result_', GET_('result_id'), GET_('result_user'));     // INVERSER
             
             hide_block(blocks.login, false, true);
             hide_block(blocks.description_block, false, true);
@@ -332,11 +334,13 @@ $(function () {
     });
 
     socket.on('show_result', function(data){
+        console.log(data)
         show_block(blocks.my_results);
         var _of = "of";
         if (language == "fr") _of = "de";
         if (getCookie('user') != data.user) data.screen_name += " "+_of+" " + data.user;
         setRadar(data.topics, data.score, data.screen_name);
+        updateTableVisible();
     });
 
     function setRadar(radar_labels, radar_data, radar_title){
@@ -394,9 +398,7 @@ $(function () {
         });
 
         $('#share_'+ data.date).on('click', function(){
-            var link = document.location.origin + "/?result_user=" + data.user + "&result_id=" + data.date;
-            copyToClipboard(link);
-            open(link,"_blank")
+            copyToClipboard(document.location.origin + "/?result_user=" + data.user + "&result_id=" + data.date);
             notif("Copied to clipboard");
         });
 
@@ -447,7 +449,7 @@ $(function () {
             $('#'+ data.date).css('color', 'rgb(255,255,255)')
         }
 
-        if (GET_("result_id") == undefined){ // 
+        if (GET_("result_id") == undefined){ 
             select();
         }else{
             if (GET_("result_id") == data.date){

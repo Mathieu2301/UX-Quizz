@@ -169,10 +169,9 @@ io.on('connection', function(client){
                 }
             })
         
-            client.on('get_result', function(date, result_user=""){
-                if (result_user == "") result_user = user;
+            client.on('get_result', function(date,){
 
-                var dir = './data/results/'+result_user+'/';
+                var dir = './data/results/'+user+'/';
         
                 fs.readdir(dir, (err, files) => {
                     if(err){ client.emit('notif', "The result does not exist", 'error'); return; }
@@ -185,7 +184,7 @@ io.on('connection', function(client){
                     });
                 })
             })
-        
+
             client.on('get_results', function(){
                 var dir = './data/results/'+user+'/';
 
@@ -227,6 +226,22 @@ io.on('connection', function(client){
         }else{
             client.emit('notif', "WRONG EMAIL", "error")
         }
+    })
+
+    client.on('get_result_', function(date, result_user){
+
+        var dir = './data/results/'+result_user+'/';
+
+        fs.readdir(dir, (err, files) => {
+            if(err){ client.emit('notif', "The result does not exist", 'error'); return; }
+            files.forEach(file => {
+                var json = require(dir+file);
+                if (json.finish_date == date){
+                    client.emit('show_result', json);
+                    client_log(log__user + " a demandé le résultat de l'écran " + json.screen_name + " de " + result_user, false)
+                }
+            });
+        })
     })
 
     client.on('get_topics', function(lang){
