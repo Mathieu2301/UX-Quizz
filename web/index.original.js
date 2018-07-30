@@ -555,8 +555,28 @@ $(function () {
         if (logs && notif) show_log(log_msg);
         if (logs && !notif) console.log(log_msg);
     });
+
+    function browser_notif(text){
+        if (!("Notification" in window)) {
+            alert("Ce navigateur ne supporte pas les notifications desktop");
+          }
+          else if (Notification.permission === "granted") {
+            var notification = new Notification(text);
+          }
+          else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+              if(!('permission' in Notification)) {
+                Notification.permission = permission;
+              }
+              if (permission === "granted") {
+                var notification = new Notification(text);
+              }
+            });
+          }
+    }
     
     function show_log(log_msg){
+        browser_notif(log_msg);
         iziToast.show({
             id: null,
             timeout: 10000,
