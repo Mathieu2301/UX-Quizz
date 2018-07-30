@@ -193,8 +193,10 @@ $(function () {
     });
 
     function emailValid(email, callback){
-        if (email == ""){
+        if (email.length <= 5){
             callback(false, "");
+        }else if (email.length >= 20){
+            callback(false, 'Invalid email');
         }else if (email.includes(" ")){
             callback(false, 'Please do not use spaces');
         }else if (email.includes("@")){
@@ -209,8 +211,10 @@ $(function () {
     }
 
     function screenNameValid(screen_name, callback){
-        if (screen_name == ""){
-            callback(false, '');
+        if (screen_name.length <= 4){
+            callback(false, 'Invalid screen name');
+        }else if (screen_name.length >= 30){
+            callback(false, 'Invalid screen name');
         }else if (screen_name.includes(" ")){
             callback(false, 'Please do not use spaces');
         }else if (includes_array(screen_name, ['\\', '/', ';', ',', '?', '!', '"', '<', '>', "'"])){
@@ -258,7 +262,6 @@ $(function () {
         $('#loading').fadeOut(200);
 
         if (GET_('result_user') != undefined && GET_('result_id') != undefined){
-            console.log("aa " + GET_('result_id'))
 
             socket.emit('get_results');     // INVERSER
             socket.emit('get_result_', GET_('result_id'), GET_('result_user'));     // INVERSER
@@ -334,7 +337,6 @@ $(function () {
     });
 
     socket.on('show_result', function(data){
-        console.log(data)
         show_block(blocks.my_results);
         var _of = "of";
         if (language == "fr") _of = "de";

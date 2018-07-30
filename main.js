@@ -39,7 +39,7 @@ io.on('connection', function(client){
     }
 
     client.on('login', function(user, lang){
-        if (user != "" && !user.includes(" ") && !user.includes("@") && !includes_array(user, ['\\', '/', ':', ';', ',', '*', '?', '!', '"', '<', '>', '|', '_', "'", '%', '#', '+', '-']) && user.includes(".")){
+        if (user.length >= 5 && user.length <= 20 && !user.includes(" ") && !user.includes("@") && !includes_array(user, ['\\', '/', ':', ';', ',', '*', '?', '!', '"', '<', '>', '|', '_', "'", '%', '#', '+', '-']) && user.includes(".")){
 
             log__user = user;
             io.sockets.emit('users', online_users);
@@ -47,10 +47,12 @@ io.on('connection', function(client){
             if (!fs.existsSync("./data/results/"+user+"/")){
                 fs.mkdirSync("./data/results/"+user+"/")
                 client_log("Le compte " + user + " vient d'être crée");
+                console.log("  "+user + "@murex.com {");
+                console.log('  }')
             }
             
             client.on('get_quizz', function(screen_name){
-                if (screen_name != "" && !screen_name.includes(" ") && !includes_array(screen_name, ['\\', '/', ';', ',', '?', '!', '"', '<', '>', "'"])){
+                if (screen_name.length >= 5 && screen_name.length <= 30 && !screen_name.includes(" ") && !includes_array(screen_name, ['\\', '/', ';', ',', '?', '!', '"', '<', '>', "'"])){
                     client_log(log__user + " vient de commencer un quizz : " + screen_name)
 
                     var step = 0;
