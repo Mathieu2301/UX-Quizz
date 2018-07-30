@@ -72,8 +72,8 @@ $(function () {
     $('#setFR_btn').on('click', function(){ setLanguage("fr"); });
 
     socket.on('show_block', function(name){show_block(name);});
-    function show_block(name){
-        if ($(name).css('opacity') == 0){        
+    function show_block(name, force=false){
+        if ($(name).css('opacity') == 0 || force){        
             $(name).animate({
                 left: '0px',
                 opacity: '1',
@@ -87,8 +87,8 @@ $(function () {
     }
 
     socket.on('hide_block', function(name){hide_block(name);});
-    function hide_block(name, loader=true){
-        if ($(name).css('opacity') == 1){
+    function hide_block(name, loader=true, force=false){
+        if ($(name).css('opacity') == 1 || force){
             $(name).animate({
                 left: '-1000px',
                 opacity: '0',
@@ -156,6 +156,7 @@ $(function () {
     })
 
     $("#start_quizz").submit(function(event) {
+        $("#screen_name_txtbox").attr("required", "true");
         var screen_name = $('#screen_name_txtbox').val();
 
         socket.emit('get_quizz', screen_name)
@@ -163,28 +164,58 @@ $(function () {
     });
     
     $("#login_block").submit(function(event) {
+        $("#username_txtbox").attr("required", "true");
         var user_name = $('#username_txtbox').val();
-        if (user_name.includes("@")){
-            notif('Please do not enter the "@murex.com"', "warn");
-        }else{
-            setCookie('user', user_name);
-            socket.emit('login', getCookie('user'), getCookie('lang'))
 
-            hide_block(blocks.login);
-            show_block(blocks.start_quizz);
-        }
+        emailValid(user_name, function(valid, msg){
+            if (valid){
+                setCookie('user', user_name);
+                socket.emit('login', getCookie('user'), getCookie('lang'))
 
+                hide_block(blocks.login);
+                show_block(blocks.start_quizz);
+            }else{
+                notif(msg, "warn");
+            }
+        })
         event.preventDefault();
     });
+
+    function emailValid(email, callback){
+        if (email == ""){
+            callback(false, "")
+        }else if (email.includes(" ")){
+            callback(false, 'Please do not use spaces')
+        }else if (email.includes("@")){
+            callback(false, 'Please do not enter the "@murex.com"')
+        }else if (includes_array(email, ['\\', '/', ':', ';', ',', '*', '?', '!', '"', '<', '>', '|', '_', "'", '%', '#', '+', '-'])){
+            callback(false, 'Please do not use \\ / : ; , * ? ! " < > | _ '+"'"+' % # + or -')
+        }else if (!email.includes(".")){
+            callback(false, 'Your email must be "first_name.name@murex.com"')
+        }else{
+            callback(true, 'Connected !')
+        }
+    }
+
+    function includes_array(str, array){
+        var result = false;
+        array.forEach(el => {
+            if (str.includes(el)) result = true;
+        });
+        return result;
+    }
 
     var first_connect = true;
 
     socket.on('connect', function () {
         if (first_connect){
-            if (getCookie("user").includes('@')){
-                notif('Please do not enter the "@murex.com"', "warn");
-                setCookie('user', "");
-            }
+
+            emailValid(getCookie("user"), function(valid, msg){
+                if (!valid){
+                    if (msg != ""){ notif(msg, "warn"); }
+                    setCookie('user', "");
+                }
+            })
     
             if (getCookie("user") != ""){
                 show_block(blocks.description_block);
@@ -203,18 +234,17 @@ $(function () {
         $(blocks.all).fadeIn();
         $('#loading').fadeOut(200);
 
-        
+        socket.emit('get_results')
+
         if (GET_('result_user') != undefined && GET_('result_id') != undefined){
             setTimeout(function(){
                 socket.emit('get_result', GET_('result_id'), GET_('result_user'));
-                hide_block(blocks.login)
-                hide_block(blocks.description_block)
-                hide_block(blocks.start_quizz)
-                show_block(blocks.my_results)
+                hide_block(blocks.login, false, true);
+                hide_block(blocks.description_block, false, true);
+                hide_block(blocks.start_quizz, false, true);
+                show_block(blocks.my_results, true);
             }, 200)
         }
-        
-        
     });
 
     socket.on('del_questions', function(){
@@ -282,6 +312,9 @@ $(function () {
 
     socket.on('show_result', function(data){
         show_block(blocks.my_results)
+        var _of = "of";
+        if (language == "fr") _of = "de";
+        if (GET_('result_id') == data.finish_date) data.screen_name += " "+_of+" " + GET_('result_user')
         setRadar(data.topics, data.score, data.screen_name);
     })
 
@@ -340,8 +373,8 @@ $(function () {
         })
 
         $('#share_'+ data.date).on('click', function(){
-            notif(document.location.origin + "/?result_user=" + getCookie('user') + "&result_id=" + data.date)
             copyToClipboard(document.location.origin + "/?result_user=" + getCookie('user') + "&result_id=" + data.date)
+            notif("Copied to clipboard")
         })
 
         $('#del_'+ data.date).on('click', function(){
@@ -612,6 +645,8 @@ $(function () {
         $temp.val($('#clipboard').text()).select();
         document.execCommand("copy");
         $temp.remove();
+
+        $('#clipboard').text("")
     }
 
 });

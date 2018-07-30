@@ -192,14 +192,16 @@ io.on('connection', function(client){
         })
     
         client.on('remove_result', function(date){
-            var dir = './data/results/'+user+'/'+date+'.json';
-            var a = false;
-            try{
-                fs.unlinkSync(dir);
-                a = true;
-            }catch(ex){}
-            if (a) client.emit('notif', "The result has been deleted", "success")
-            client_log(log__user + " a supprimé un résultat : " + date)
+            if (!date.includes('/')){
+                var dir = './data/results/'+user+'/'+date+'.json';
+                var a = false;
+                try{
+                    fs.unlinkSync(dir);
+                    a = true;
+                }catch(ex){}
+                if (a) client.emit('notif', "The result has been deleted", "success")
+                client_log(log__user + " a supprimé un résultat : " + date)
+            }
         })
 
     })
