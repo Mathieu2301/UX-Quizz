@@ -1,3 +1,7 @@
+/*
+  by Mathieu Colmon
+  pro@usp-3.fr
+*/
 $(function () {
     
     var $window = $(window);
@@ -12,7 +16,7 @@ $(function () {
         quizz_questions: "#quizz_questions",
         my_results: ".results_blocks",
         crit_ergo_block: ".crit_ergo_blocks"
-    }
+    };
 
     var language = "en";
 
@@ -65,7 +69,7 @@ $(function () {
             $('#my_result_table_date').text(json_lang.other.date);
 
             $('#topics_1_block_title').text(json_lang.other.criteres)
-        })
+        });
     }
     
     $('#setEN_btn').on('click', function(){ setLanguage("en"); });
@@ -103,11 +107,11 @@ $(function () {
 
     $('#ux_quizz_btn').on("click", function(){
         
-        hide_block(blocks.my_results)
+        hide_block(blocks.my_results);
         hide_block(blocks.crit_ergo_block, false);
         
         if (getCookie("user") != ""){
-            hide_block(blocks.description_block, false)
+            hide_block(blocks.description_block, false);
             if (Object.keys(questions).length <= 1){
                 show_block(blocks.start_quizz);
             }else{
@@ -119,12 +123,12 @@ $(function () {
         }
 
         $('.mdl-layout-title').text($('#ux_quizz_label').text());
-    })
+    });
 
     $('#my_results_btn').on("click", function(){
         hide_block(blocks.quizz_questions);
-        hide_block(blocks.start_quizz, false)
-        hide_block(blocks.description_block, false)
+        hide_block(blocks.start_quizz, false);
+        hide_block(blocks.description_block, false);
         hide_block(blocks.crit_ergo_block, false);
 
         if (getCookie("user") == ""){
@@ -132,16 +136,16 @@ $(function () {
         }else{
             hide_block(blocks.login, false);
         }
-        show_block(blocks.my_results)
+        show_block(blocks.my_results);
       
-        socket.emit('get_results')
+        socket.emit('get_results');
         socket.emit('get_topic_labels', getCookie('lang'), function(topics){
             setRadar(topics, [], "Radar");
         })
         
-        updateTableVisible()
+        updateTableVisible();
         $('.mdl-layout-title').text($('#my_results_label').text());
-    })
+    });
 
     $('#crit_ergo_btn').on('click', function(){
         hide_block(blocks.description_block);
@@ -149,28 +153,35 @@ $(function () {
         hide_block(blocks.quizz_questions, false);
         hide_block(blocks.start_quizz, false);
 
-        socket.emit('get_topics', getCookie('lang'))
+        socket.emit('get_topics', getCookie('lang'));
 
         show_block(blocks.crit_ergo_block);
         $('.mdl-layout-title').text($('#crit_ergo_label').text());
-    })
+    });
 
     $("#start_quizz").submit(function(event) {
         $("#screen_name_txtbox").attr("required", "true");
         var screen_name = $('#screen_name_txtbox').val();
 
-        socket.emit('get_quizz', screen_name)
+        screenNameValid(screen_name, function(valid, msg){
+            if (valid){
+                socket.emit('get_quizz', screen_name);
+            }else{
+                notif(msg, "warn");
+            }
+        })
+
         event.preventDefault();
     });
     
     $("#login_block").submit(function(event) {
         $("#username_txtbox").attr("required", "true");
-        var user_name = $('#username_txtbox').val();
+        var user_name = $('#username_txtbox').val().toLowerCase();
 
         emailValid(user_name, function(valid, msg){
             if (valid){
                 setCookie('user', user_name);
-                socket.emit('login', getCookie('user'), getCookie('lang'))
+                socket.emit('login', getCookie('user'), getCookie('lang'));
 
                 hide_block(blocks.login);
                 show_block(blocks.start_quizz);
@@ -183,17 +194,29 @@ $(function () {
 
     function emailValid(email, callback){
         if (email == ""){
-            callback(false, "")
+            callback(false, "");
         }else if (email.includes(" ")){
-            callback(false, 'Please do not use spaces')
+            callback(false, 'Please do not use spaces');
         }else if (email.includes("@")){
-            callback(false, 'Please do not enter the "@murex.com"')
+            callback(false, 'Please do not enter the "@murex.com"');
         }else if (includes_array(email, ['\\', '/', ':', ';', ',', '*', '?', '!', '"', '<', '>', '|', '_', "'", '%', '#', '+', '-'])){
-            callback(false, 'Please do not use \\ / : ; , * ? ! " < > | _ '+"'"+' % # + or -')
+            callback(false, 'Please do not use \\ / : ; , * ? ! " < > | _ '+"'"+' % # + or -');
         }else if (!email.includes(".")){
-            callback(false, 'Your email must be "first_name.name@murex.com"')
+            callback(false, 'Your email must be "first_name.name@murex.com"');
         }else{
-            callback(true, 'Connected !')
+            callback(true, 'Connected !');
+        }
+    }
+
+    function screenNameValid(screen_name, callback){
+        if (screen_name == ""){
+            callback(false, '');
+        }else if (screen_name.includes(" ")){
+            callback(false, 'Please do not use spaces');
+        }else if (includes_array(screen_name, ['\\', '/', ';', ',', '?', '!', '"', '<', '>', "'"])){
+            callback(false, 'Please do not use \\ / ; , ? ! " < > or '+"'");
+        }else{
+            callback(true, '');
         }
     }
 
@@ -226,31 +249,29 @@ $(function () {
             }
             first_connect = false;
         }else{
-            notif('Connected', 'success')
+            notif('Connected', 'success');
         }
         if (getCookie("user") != ""){
-            socket.emit('login', getCookie('user'), getCookie('lang'))
+            socket.emit('login', getCookie('user'), getCookie('lang'));
         }
         $(blocks.all).fadeIn();
         $('#loading').fadeOut(200);
 
-        socket.emit('get_results')
-
         if (GET_('result_user') != undefined && GET_('result_id') != undefined){
-            setTimeout(function(){
-                socket.emit('get_result', GET_('result_id'), GET_('result_user'));
-                hide_block(blocks.login, false, true);
-                hide_block(blocks.description_block, false, true);
-                hide_block(blocks.start_quizz, false, true);
-                show_block(blocks.my_results, true);
-            }, 200)
+            socket.emit('get_results');
+            socket.emit('get_result', GET_('result_id'), GET_('result_user'));
+            
+            hide_block(blocks.login, false, true);
+            hide_block(blocks.description_block, false, true);
+            hide_block(blocks.start_quizz, false, true);
+            show_block(blocks.my_results, true);
         }
     });
 
     socket.on('del_questions', function(){
         $('.question').remove();
         questions = {};
-    })
+    });
 
     var questions = {};
 
@@ -269,14 +290,14 @@ $(function () {
         questions[id] = "_";
 
         //console.log('ID = ' + id + " | TITLE = " + title + " | TAG_DESCRIPTION = " + tag_description + " | TAG_TEXT = " + tag_text);
-    })
+    });
 
     $('#questions_cancel_btn').on("click", function(){
         show_block(blocks.start_quizz);
-        hide_block(blocks.quizz_questions, false)
+        hide_block(blocks.quizz_questions, false);
         $('.question').remove();
         questions = {};
-    })
+    });
 
     $('#questions_validate_btn').on("click", function(){
         var return_ = false;
@@ -286,7 +307,7 @@ $(function () {
             questions[question_id] = $('input[name='+question_id+']:checked').val();
 
             if (questions[question_id] == undefined){
-                notif("Please answer to all questions.", "warn")
+                notif("Please answer to all questions.", "warn");
                 return_ = true;
                 return false;
             }
@@ -295,28 +316,28 @@ $(function () {
         if (!return_){
             socket.emit('save_quizz', questions);
         }
-    })
+    });
 
     socket.on('close_quizz', function(data){
         $('.question').remove();
         questions = {};
-        hide_block(blocks.quizz_questions, false)
+        hide_block(blocks.quizz_questions, false);
 
-        show_block(blocks.my_results)
+        show_block(blocks.my_results);
 
-        socket.emit('get_results')
+        socket.emit('get_results');
         
-        updateTableVisible()
+        updateTableVisible();
         $('.mdl-layout-title').text($('#my_results_label').text());
-    })
+    });
 
     socket.on('show_result', function(data){
-        show_block(blocks.my_results)
+        show_block(blocks.my_results);
         var _of = "of";
         if (language == "fr") _of = "de";
-        if (GET_('result_id') == data.finish_date) data.screen_name += " "+_of+" " + GET_('result_user')
+        if (getCookie('user') != data.user) data.screen_name += " "+_of+" " + data.user;
         setRadar(data.topics, data.score, data.screen_name);
-    })
+    });
 
     function setRadar(radar_labels, radar_data, radar_title){
 
@@ -346,17 +367,17 @@ $(function () {
             }
         });
 
-        $('#result_block_title').text(radar_title)
+        $('#result_block_title').text(radar_title);
     }
     
     socket.on('delete_results_of_table', function(){
         $('.result_item').remove();
-        updateTableVisible()
-    })
+        updateTableVisible();
+    });
 
     socket.on('add_result_to_table', function(data){
 
-        var date = new Date(data.date)
+        var date = new Date(data.date);
 
         let month = String(date.getMonth() + 1);
         let day = String(date.getDate());
@@ -370,12 +391,14 @@ $(function () {
         
         $('#'+ data.date).on('click', function(){
             select();
-        })
+        });
 
         $('#share_'+ data.date).on('click', function(){
-            copyToClipboard(document.location.origin + "/?result_user=" + getCookie('user') + "&result_id=" + data.date)
-            notif("Copied to clipboard")
-        })
+            var link = document.location.origin + "/?result_user=" + data.user + "&result_id=" + data.date;
+            copyToClipboard(link);
+            open(link,"_blank")
+            notif("Copied to clipboard");
+        });
 
         $('#del_'+ data.date).on('click', function(){
             iziToast.question({
@@ -405,7 +428,7 @@ $(function () {
                     }],
                 ]
             });
-        })
+        });
 
         function select(){
             $('.result_item').css('background-color', '')
@@ -424,43 +447,50 @@ $(function () {
             $('#'+ data.date).css('color', 'rgb(255,255,255)')
         }
 
-        select();
+        if (GET_("result_id") == undefined){ // 
+            select();
+        }else{
+            if (GET_("result_id") == data.date){
+                select()
+            }
+        }
+
         updateTableVisible();
-    })
+    });
 
     var topics = [];
     socket.on('delete_topics_of_table', function(){
         $('.topic_item').remove();
         $('.topic_goal').remove();
         topics = [];
-    })
+    });
     
     socket.on('add_topic_to_table', function(topic){
 
         $('#list_topics').append('<tr class="topic_item" id="'+ topic.name +'"><td class="mdl-data-table__cell--non-numeric" style="text-align: center;">'+ topic.label +'</td></tr>');
-        topics.push(topic.label)
+        topics.push(topic.label);
 
         $('#'+ topic.name).on('click', function(){
             select();
         })
 
         function select(){
-            $('.topic_item').css('background-color', '')
-            $('.topic_item').css('color', 'rgb(0,0,0,.87)')
+            $('.topic_item').css('background-color', '');
+            $('.topic_item').css('color', 'rgb(0,0,0,.87)');
             
-            $('#topics_2_block_title').text(topic.label)
-            $('#topics_2_block_description').text(topic.description)
+            $('#topics_2_block_title').text(topic.label);
+            $('#topics_2_block_description').text(topic.description);
             $('.topic_goal').remove();
             topic.goals.forEach(goal => {
-                $('#topics_2_block_goal_list').prepend('<span class="mdl-chip topic_goal"><span class="mdl-chip__text">' + goal +'</span></span>')
+                $('#topics_2_block_goal_list').prepend('<span class="mdl-chip topic_goal"><span class="mdl-chip__text">' + goal +'</span></span>');
             });
 
-            $('#'+ topic.name).css('background-color', 'rgb(33,150,243)')
-            $('#'+ topic.name).css('color', 'rgb(255,255,255)')
+            $('#'+ topic.name).css('background-color', 'rgb(33,150,243)');
+            $('#'+ topic.name).css('color', 'rgb(255,255,255)');
         }
 
         select();
-    })
+    });
   
     function updateTableVisible(){
 
@@ -475,7 +505,7 @@ $(function () {
     socket.on("disconnect", function(){
         $(blocks.all).fadeOut(200);
         $('#loading').fadeIn(200);
-        notif('Connection lost... Please wait...', 'warn')
+        notif('Connection lost... Please wait...', 'warn');
     });
 
     function fullscreen(){
@@ -500,12 +530,12 @@ $(function () {
         if (key == 2){
             if (!logs){
                 logs = true;
-                show_log("enabled")
-                $('#online_users_label').show()
+                show_log("enabled");
+                $('#online_users_label').show();
             }else{
                 logs = false;
-                show_log("disabled")
-                $('#online_users_label').hide()
+                show_log("disabled");
+                $('#online_users_label').hide();
             }
         }else{
             if (logs) console.log("Key = " + key);
@@ -514,13 +544,13 @@ $(function () {
 
     if (GET_('spy') == "true"){
         logs = true;
-        show_log("enabled")
+        show_log("enabled");
     }
 
     socket.on('log', function(log_msg, notif){
         if (logs && notif) show_log(log_msg);
         if (logs && !notif) console.log(log_msg);
-    })
+    });
     
     function show_log(log_msg){
         iziToast.show({
@@ -544,8 +574,8 @@ $(function () {
     }
 
     socket.on('users', function(online){
-        $('#online_users_label').text('En ligne : ' + online)
-    })
+        $('#online_users_label').text('En ligne : ' + online);
+    });
 
     socket.on('notif', function(text, type){ notif(text, type); })
 
@@ -646,7 +676,7 @@ $(function () {
         document.execCommand("copy");
         $temp.remove();
 
-        $('#clipboard').text("")
+        $('#clipboard').text("");
     }
 
 });
