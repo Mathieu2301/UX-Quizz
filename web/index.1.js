@@ -215,8 +215,6 @@ $(function () {
             callback(false, 'Invalid screen name');
         }else if (screen_name.length >= 30){
             callback(false, 'Invalid screen name');
-        }else if (screen_name.includes(" ")){
-            callback(false, 'Please do not use spaces');
         }else if (includes_array(screen_name, ['\\', '/', ';', ',', '?', '!', '"', '<', '>', "'"])){
             callback(false, 'Please do not use \\ / ; , ? ! " < > or '+"'");
         }else{
@@ -320,6 +318,8 @@ $(function () {
         if (!return_){
             socket.emit('save_quizz', questions);
         }
+
+        window.scrollTo(0,0);
     });
   
     socket.on('close_quizz', function(data){
@@ -487,7 +487,7 @@ $(function () {
             $('.topic_item').css('color', 'rgb(0,0,0,.87)');
             
             $('#topics_2_block_title').text(topic.label);
-            $('#topics_2_block_description').text(topic.description);
+            $('#topics_2_block_description').html(topic.description);
             $('.topic_goal').remove();
             topic.goals.forEach(goal => {
                 $('#topics_2_block_goal_list').prepend('<span class="mdl-chip topic_goal"><span class="mdl-chip__text">' + goal +'</span></span>');

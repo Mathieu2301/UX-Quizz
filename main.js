@@ -52,7 +52,7 @@ io.on('connection', function(client){
             }
             
             client.on('get_quizz', function(screen_name){
-                if (screen_name.length >= 5 && screen_name.length <= 30 && !screen_name.includes(" ") && !includes_array(screen_name, ['\\', '/', ';', ',', '?', '!', '"', '<', '>', "'"])){
+                if (screen_name.length >= 5 && screen_name.length <= 30 && !includes_array(screen_name, ['\\', '/', ';', ',', '?', '!', '"', '<', '>', "'"])){
                     client_log(log__user + " vient de commencer un quizz : " + screen_name)
 
                     var step = 0;
@@ -214,7 +214,7 @@ io.on('connection', function(client){
             })
         
             client.on('remove_result', function(date){
-                if (!date.includes('/')){
+                if (!date.toString().includes('/')){
                     var dir = './data/results/'+user+'/'+date+'.json';
                     var a = false;
                     try{
