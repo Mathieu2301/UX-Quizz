@@ -86,7 +86,8 @@ io.on('connection', function(client){
                             ++topic_actuel;   
                         });
         
-                        ++step;       
+                        ++step;
+                        client.emit('update_quizz_progress', step, topics.length)  
                     }
             
                     getQuizzTopic(step);
